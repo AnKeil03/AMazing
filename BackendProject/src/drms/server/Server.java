@@ -49,6 +49,7 @@ public class Server implements Runnable {
 
 
         boolean killServer = false;
+        int xx=0;
 
         try {
             // welcomeSocket = new ServerSocket(PORT);
@@ -119,12 +120,17 @@ public class Server implements Runnable {
                                 if (buffer.limit()!=0) {
                                     String data = new String( buffer.array(), Charset.forName("UTF-8") );
                                     System.out.println("Received message: <"+data+">");
-                                    String R = WebManager.webSocketHandshakeRequest(data);
-                                    System.out.println("Sent reply: <"+R+">");
-                                    messageToClient(sc.socket(),R);
-                                   // WebManager.webSocketHandshakeRequest(data);
-                                    /*System.out.println("Sending test response");
-                                    messageToClient(sc.socket(),"hello i am server");*/
+                                    if (xx==0) { //handshake; this condition needs to be changed to recognize individual clients
+                                        String R = WebManager.webSocketHandshakeRequest(data);
+                                        System.out.println("Sent reply: <" + R + ">");
+                                        messageToClient(sc.socket(), R);
+                                        xx++;
+                                    } else { //receiving messages from client after handshake
+                                        byte[] msgBytes = new byte[buffer.remaining()];
+                                        buffer.get(msgBytes); //copy bytes from buffer to byte array
+                                        System.out.println("Decoded message: <"+(new String(WebManager.decodeFrame(msgBytes)))+">");
+                                        killServer=true; //remove this once connections are kept track of
+                                    }
 
                                 }
 
