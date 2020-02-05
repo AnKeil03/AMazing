@@ -120,8 +120,8 @@ public class Server implements Runnable {
                                     String data = new String( buffer.array(), Charset.forName("UTF-8") );
                                     System.out.println("Received message: <"+data+">");
                                     String R = WebManager.webSocketHandshakeRequest(data);
-                                    System.out.println(R);
-                                    messageToClient(sc.socket(),WebManager.keyResponse(R));
+                                    System.out.println("Sent reply: <"+R+">");
+                                    messageToClient(sc.socket(),R);
                                    // WebManager.webSocketHandshakeRequest(data);
                                     /*System.out.println("Sending test response");
                                     messageToClient(sc.socket(),"hello i am server");*/

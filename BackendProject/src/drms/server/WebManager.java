@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WebManager {
 
@@ -14,6 +16,25 @@ public class WebManager {
         returns true iff the received message is in the form of a web socket handshake request
      */
     public static String webSocketHandshakeRequest(String msg) {
+        Matcher get = Pattern.compile("^GET").matcher(msg);
+        try {
+            if (get.find()) {
+                System.out.println("get.find()");
+                Matcher match = Pattern.compile("Sec-WebSocket-Key: (.*)").matcher(msg);
+                match.find();
+                byte[] response = ("HTTP/1.1 101 Switching Protocols\r\n"
+                        + "Connection: Upgrade\r\n"
+                        + "Upgrade: websocket\r\n"
+                        + "Sec-WebSocket-Accept: "
+                        + Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-1").digest((match.group(1) + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").getBytes("UTF-8")))
+                        + "\r\n\r\n").getBytes("UTF-8");
+                return (new String(response));
+            }
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("unsupported");
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("algorithm");
+        }
         String[] lines = msg.split(System.getProperty("line.separator"));
         String keyResponse = "";
         boolean flag[] = {false,false,false};
@@ -52,6 +73,7 @@ public class WebManager {
                 }
                 if (header.equals("Sec-WebSocket-Key")) {
                     flag[2]=true;
+
                     keyResponse = keyResponse(data);
                 }
             }
@@ -66,12 +88,13 @@ public class WebManager {
     public static String keyResponse(String key) {
         String resp = "";
         try {
+
             byte[] response = ("HTTP/1.1 101 Switching Protocols\r\n"
                     + "Connection: Upgrade\r\n"
                     + "Upgrade: websocket\r\n"
                     + "Sec-WebSocket-Accept: "
                     + Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-1").digest((key.getBytes() + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").getBytes("UTF-8")))
-                    + "\r\n\r\n").getBytes("UTF-8");
+                    + "\r\nSec-WebSocket-Protocol: chat\r\n\r\n").getBytes("UTF-8");
             resp = new String(response);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
