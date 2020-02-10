@@ -15,18 +15,25 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.LinkedList;
+import drms.server.entity.Connection;
 
 
 public class Server implements Runnable {
 
 
     public static final int PORT = 80; //HTTP Port
+    public static final int MAX_SIM_CONNECTS = 10; //max number of connections to listen for at once
+    public static final int MAX_CONNECTIONS = 100; //max number of connected clients at one time
 
-    private int numConnections;
+    private int numConnections,nextConnectionID; //connection management stuff
+    private LinkedList<Integer> recycledIDs;
 
     private ServerSocketChannel socketChannel;
     private ByteBuffer buffer;
     private Selector selector;
+
+    private Connection connections[];
 
 
     public Server() {
@@ -36,17 +43,19 @@ public class Server implements Runnable {
         selector = null;
 
         numConnections = 0;
+        nextConnectionID=0;
+        recycledIDs = new LinkedList<>();
+        connections = new Connection[MAX_CONNECTIONS];
+        for (int i=0; i<MAX_CONNECTIONS;i++)
+            connections[i]=null;
 
     }
 
     /* run():
         called when this thread is started
-
     */
 
     public void run() {
-
-
 
         boolean killServer = false;
         int xx=0;
@@ -67,7 +76,7 @@ public class Server implements Runnable {
             while (!killServer) {
 
 
-                int numConnects = selector.select(1); //accept one incoming connection at a time
+                int numConnects = selector.select(MAX_SIM_CONNECTS); //accept MAX_SIM_CONNECTS incoming connections at a time
 
                 //text input from terminal for server admin commands
                 char ch = 0;
@@ -82,10 +91,8 @@ public class Server implements Runnable {
                 if (!br.ready() && build.length()>0) {
                     build = build.substring(0, build.length()-1); //remove \n at end
                     System.out.println("typed: "+build);
-
                     build="";
                 }
-
                 if (numConnects != 0) {
                     Set keys = selector.selectedKeys(); //current sockets
                     Iterator it = keys.iterator();
@@ -102,14 +109,14 @@ public class Server implements Runnable {
                             // Register it with the selector for reading
                             sc.register(selector, SelectionKey.OP_READ);
 
+                            registerConnection(s); //register the connection with connection manager
+
                         } else if ((key.readyOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ) { //incoming data
-                            SocketChannel sc = (SocketChannel)key.channel();
+                            SocketChannel sc = (SocketChannel) key.channel();
 
                             try {
 
-
-                                sc = (SocketChannel)key.channel(); //clear the buffer
-
+                                sc = (SocketChannel) key.channel(); //clear the buffer
                                 buffer.clear();
                                 buffer.put(new byte[1024]);
                                 buffer.clear();
@@ -117,54 +124,52 @@ public class Server implements Runnable {
                                 buffer.flip();
 
                                 //read data from buffer
-                                if (buffer.limit()!=0) {
-                                    String data = new String( buffer.array(), Charset.forName("UTF-8") );
-                                    System.out.println("Received message: <"+data+">");
-                                    if (xx==0) { //handshake; this condition needs to be changed to recognize individual clients
-                                        String R = WebManager.webSocketHandshakeRequest(data);
-                                        System.out.println("Sent reply: <" + R + ">");
-                                        messageToClient(sc.socket(), R);
-                                        xx++;
+                                if (buffer.limit() != 0) {
+                                    String data = new String(buffer.array(), Charset.forName("UTF-8"));
+                                    System.out.println("Received message: <" + data + ">");
+                                    Connection cur = getConnection(sc.socket());
+                                    if (!cur.isActive()) { //handshake; this condition needs to be changed to recognize individual clients
+                                        if (cur.getState()==Connection.HANDSHAKE_INCOMPLETE) {
+                                            String R = WebManager.webSocketHandshakeRequest(data);
+                                            if (!R.equals(WebManager.BAD_REQUEST)) {
+                                                messageToClient(cur, R);
+                                                cur.setState(Connection.ACTIVE);
+                                            }
+                                        } else {
+                                            dropConnection(cur); //drop connections that dont do websocket
+                                        }
                                     } else { //receiving messages from client after handshake
                                         byte[] msgBytes = new byte[buffer.remaining()];
                                         buffer.get(msgBytes); //copy bytes from buffer to byte array
-                                        System.out.println("Decoded message: <"+(new String(WebManager.decodeFrame(msgBytes)))+">");
-                                        killServer=true; //remove this once connections are kept track of
+                                        System.out.println("Received web message: <" + (new String(WebManager.decodeFrame(msgBytes))) + ">");
+
+                                        String send = "testing"; //testing a reply
+                                        messageToClient(sc.socket(), WebManager.encodeFrame(send.getBytes()));
+                                        //killServer = true; //remove this once connections are kept track of
                                     }
 
                                 }
-
-
-
                                 // remove dead connections from selector and close
-                                if (buffer.limit()==0) {
-
+                                if (buffer.limit() == 0) {
                                     key.cancel();
-
                                     Socket s = null;
                                     try {
                                         s = sc.socket();
                                         s.close();
-                                    } catch( IOException ie ) {
-                                        System.err.println( "Error closing socket "+s+": "+ie );
+                                    } catch (IOException ie) {
+                                        System.err.println("Error closing socket " + s + ": " + ie);
                                     }
                                 }
 
-                            } catch( IOException ie ) {
+                            } catch (IOException ie) {
                                 System.out.println(ie);
-
-                                System.out.println( "Closed "+sc );
+                                System.out.println("Closed " + sc);
                             }
                         }
-
-
                     }
                     keys.clear();
                 }
             }
-
-
-
             //end of server loop; shut down stuff
 
             System.out.println("Shutting down server...");
@@ -177,26 +182,100 @@ public class Server implements Runnable {
     }
 
 
-    public void messageToClient(Socket c, String mes) throws IOException {
+    private void messageToClient(Socket c, String mes) throws IOException {
         DataOutputStream outStream = new DataOutputStream(c.getChannel().socket().getOutputStream());
 
         ByteBuffer bytebuf = ByteBuffer.wrap(mes.getBytes());
         try {
             c.getChannel().write(bytebuf);
         } catch (IOException ex) {
-            System.out.println("error sending message");
+            System.out.println("Error sending message");
         }
     }
+    private void messageToClient(Socket c, byte[] mes) throws IOException {
+        DataOutputStream outStream = new DataOutputStream(c.getChannel().socket().getOutputStream());
 
-
-    public void disconnect(Socket c) throws IOException {
+        ByteBuffer bytebuf = ByteBuffer.wrap(mes);
         try {
-            System.out.println("Disconnecting "+c.toString());
-            c.close();
-        } catch (NullPointerException e) {
-            System.out.println("Error disconnecting client "+c.toString());
+            c.getChannel().write(bytebuf);
+        } catch (IOException ex) {
+            System.out.println("Error sending message");
         }
     }
+    public void messageToClient(Connection c, String msg) throws IOException {
+        messageToClient(c.getSocket(),msg);
+    }
+
+
+
+
+
+    public void disconnect(Socket s) throws IOException {
+        try {
+            System.out.println("Disconnecting "+s.toString());
+            s.close();
+        } catch (NullPointerException e) {
+            System.out.println("Error disconnecting client "+s.toString());
+        }
+    }
+
+
+    // Connection methods
+
+    /* registerConnection(s):
+        create a connection object attached to socket connection s
+        should probably change id system to something based on
+        hashing client ports
+     */
+    private void registerConnection(Socket s) throws IOException {
+        System.out.println("Attempting to register connection for "+s.toString());
+        Connection c = new Connection(s);
+        numConnections++;
+        if (nextConnectionID<MAX_CONNECTIONS) {
+            connections[nextConnectionID] = c;
+            c.setConnectionID(nextConnectionID++);
+            c.setState(Connection.HANDSHAKE_INCOMPLETE);
+        }
+        else if (recycledIDs.size() > 0) { //all ids will be recycled at this point
+            int next = recycledIDs.removeFirst();
+            while (connections[next]!=null) {
+                if (recycledIDs.size()==0) {
+                    System.out.println("The server is full. Connection rejected.");
+                    dropConnection(c);
+                    return;
+                }
+                else
+                    next = recycledIDs.removeFirst();
+            }
+            connections[next]=c;
+            c.setConnectionID(next);
+            c.setState(Connection.HANDSHAKE_INCOMPLETE);
+        }
+        else {
+            System.out.println("The server is full. Connection rejected.");
+            dropConnection(c);
+            return;
+        }
+    }
+
+    private void dropConnection(Connection c) throws IOException {
+        int id = c.getConnectionID();
+        disconnect(c.getSocket());
+        connections[id]=null;
+        recycledIDs.addLast(id); //reuse their connection id so we dont run out of space
+    }
+
+    private Connection getConnection(Socket s) {
+        for (Connection c: connections)
+            if (c.getPort()==s.getPort())
+                return c;
+
+        return null;
+    }
+
+
+
+
 
 
 
