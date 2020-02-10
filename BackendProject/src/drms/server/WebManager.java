@@ -11,9 +11,9 @@ public class WebManager {
 
     public static final String BAD_REQUEST = "HTTP/1.1 400 BAD REQUEST\r\nContent-Type: text/html\r\n\r\n";
 
-    /*
-        webSocketHandShakeRequest(msg):
-        returns true iff the received message is in the form of a web socket handshake request
+
+    /*  webSocketHandShakeRequest(msg):
+        returns the handshake response if msg is in format of handshake request
      */
     public static String webSocketHandshakeRequest(String msg) {
         Matcher get = Pattern.compile("^GET").matcher(msg);
@@ -30,34 +30,22 @@ public class WebManager {
                 return (new String(response));
             }
         } catch (UnsupportedEncodingException e) {
-            System.out.println("unsupported");
+            System.out.println("unsupported encoding");
         } catch (NoSuchAlgorithmException e) {
-            System.out.println("algorithm");
+            System.out.println("no algorithm");
         }
 
         return BAD_REQUEST;
     }
 
-    public static String keyResponse(String key) {
-        String resp = "";
-        try {
-
-            byte[] response = ("HTTP/1.1 101 Switching Protocols\r\n"
-                    + "Connection: Upgrade\r\n"
-                    + "Upgrade: websocket\r\n"
-                    + "Sec-WebSocket-Accept: "
-                    + Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-1").digest((key.getBytes() + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").getBytes("UTF-8")))
-                    + "\r\nSec-WebSocket-Protocol: chat\r\n\r\n").getBytes("UTF-8");
-            resp = new String(response);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return resp;
-    }
 
 
+    /* decodeFrame(msg):
+        returns the proper ascii bytes of a decoded message
+        from a websocket client.
+        found this algorithm at:
+        https://stackoverflow.com/questions/18368130/how-to-parse-and-validate-a-websocket-frame-in-java/18368334
+     */
     public static byte[] decodeFrame(byte[] msg) {
         int maskIndex = 2;
         byte[] maskBytes = new byte[4];
@@ -79,7 +67,40 @@ public class WebManager {
         return message;
     }
 
+    /* encodeFrame(msg):
+        encodes msg into websocket bytes to send over TCP
+        created from referencing RFC 6455
+        https://tools.ietf.org/html/rfc6455
+     */
+    public static byte[] encodeFrame(byte[] msg) {
 
+        byte textFrame = (byte)0b10000001; //first 8 bits of frame
+        byte maskedPayloadLen = (byte)0;
+        byte unmaskedPayloadLen = (byte)0;
+        byte extPayloadLen[] = new byte[8];
+        byte maskingKey[] = new byte[4];
+        if (msg.length<126) { //msg lengths that can be expressed in 7 bits
+            maskedPayloadLen = (byte) (0b10000000 + msg.length);
+            unmaskedPayloadLen = (byte) msg.length;
+        }
+        else if (msg.length<65535) { //msg lengths that can be expressed in 16 bits (needs work/verification)
+            maskedPayloadLen = (byte)0b11111110;
+            extPayloadLen[0] = (byte)((msg.length)>>>8); //right shift to get first half as one byte
+            extPayloadLen[1] = (byte)(((msg.length)^(0b1111111100000000))&(msg.length)); //get second half as one byte
+        }
+        else { // message lengths up to a 64 bit integer. currently no actual support for this
+            for (int i=0; i<8; i++)
+                extPayloadLen[i] = (byte)0;
+        }
 
+        //basic unmaksed sending of a short message
+        byte unmaskedShortFrame[] = new byte[2+msg.length];
+        unmaskedShortFrame[0]=textFrame;
+        unmaskedShortFrame[1]=unmaskedPayloadLen;
+        for (int i=0; i<msg.length; i++)
+            unmaskedShortFrame[i+2]=msg[i];
+
+        return unmaskedShortFrame;
+    }
 
 }
