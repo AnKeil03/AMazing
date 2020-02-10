@@ -1,6 +1,6 @@
 package drms.server.entity;
 
-import java.net.Socket;
+import java.net.*;
 
 public class Connection {
 
@@ -27,5 +27,23 @@ public class Connection {
     public boolean isActive(){return (state==ACTIVE);}
     public int getPort(){return port;}
     public int getState(){return state;}
+
+    public String toString() {
+        String ip=(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace(":",".");
+        return "[Connection<id="+connectionID+",port="+port+">] state: "+getStateString()
+                +", ip="+ip;
+    }
+
+    private String getStateString() {
+        switch (state) {
+            case AWAITING_REGISTRATION:
+                return "Awaiting registration from server";
+            case HANDSHAKE_INCOMPLETE:
+                return "Awaiting WebSocket handshake completion";
+            case ACTIVE:
+                return "Ready for data transfer";
+        }
+        return "Invalid state";
+    }
 
 }
