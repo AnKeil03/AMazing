@@ -53,7 +53,6 @@ public class Server implements Runnable {
             connections[i]=null;
 
 
-
     }
 
 
@@ -218,7 +217,6 @@ public class Server implements Runnable {
     public void messageToClient(Connection c, String msg) throws IOException {
         messageToClient(c.getSocket(),msg);
     }
-
 
 
 

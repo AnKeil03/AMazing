@@ -19,7 +19,6 @@ public class Connection {
     }
 
 
-
     public String toString() {
         String ip=(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace(":",".");
         return "[Connection<id="+connectionID+",port="+port+">] state: "+getStateString()

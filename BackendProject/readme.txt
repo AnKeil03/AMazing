@@ -9,8 +9,6 @@ Enter in terminal in BackendProject directory:
 
 Enter Y (yes) or N (no) on startup when prompted if a MySQL server is running.
 
-* Server runs using sudo so that it can be ran on port 80, so you will be prompted to type your password when executing run.sh
-
 
 
 
