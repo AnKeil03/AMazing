@@ -41,6 +41,10 @@ public class Connection {
     public void setConnectionID(int id) {connectionID=id;}
     public void setState(int s) {state=s;}
 
+    public void disconnect() {
+
+    }
+
     public Socket getSocket() {return socket;}
     public int getConnectionID() {return connectionID;}
     public boolean isActive(){return (state==WebSocket.ACTIVE);}

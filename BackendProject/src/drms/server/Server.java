@@ -73,7 +73,7 @@ public class Server implements Runnable {
             socketChannel.socket().bind(new InetSocketAddress(port));
             socketChannel.configureBlocking(false);
 
-            System.out.println("Starting server on port "+port+"...");
+            System.out.println("Starting "+activeAPI.getName()+" server on port "+port+"...");
 
             selector = Selector.open();
 
@@ -137,7 +137,6 @@ public class Server implements Runnable {
                                     System.out.println("Received message: <" + data + ">");
                                     Connection cur = getConnection(sc.socket());
                                     processIncomingMessage(cur,data);
-
                                 }
                                 // remove dead connections from selector and close
                                 if (buffer.limit() == 0) {
@@ -175,20 +174,16 @@ public class Server implements Runnable {
 
     /* processIncomingMessage(c,data):
         handle data when it is received from a client.
-
      */
     private void processIncomingMessage(Connection c, String data) throws IOException {
         if (activeAPI!=null)
-            activeAPI.receiveMessage(c,data);
-        else {
-            System.out.println("standard tcp data received. echoing back");
-            messageToClient(c,data);
-        }
+            activeAPI.processPacket(c,data);
     }
 
 
 
     //Various message to client methods
+
 
     /* messageToClient(s,<String> mes):
         send message to a client thru their socket connection in form of string
@@ -294,9 +289,12 @@ public class Server implements Runnable {
         based on port socket is connected to
      */
     private Connection getConnection(Socket s) {
-        for (Connection c: connections)
-            if (c.getPort()==s.getPort())
+        for (Connection c: connections) {
+            if (c==null)
+                continue;
+            if (c.getPort() == s.getPort())
                 return c;
+        }
 
         return null;
     }

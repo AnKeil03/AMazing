@@ -18,14 +18,76 @@ import drms.Main;
 public class WebSocket extends API {
 
     public WebSocket() {
-        super(API.WEBSOCKET);
+        super();
     }
 
 
-    /*  webSocketHandShakeRequest(msg):
-        returns the handshake response if msg is in format of handshake request
+    /* processMessage(c,data):
+        process packet data after it has been conveted to plaintext.
+        completes handshake for new connections,
+        otherwise replies to any message from an active connection with "testing"
      */
-    private String webSocketHandshakeRequest(String msg) {
+    @Override
+    public void processMessage(Connection c, String data) throws IOException {
+        if (data==null)
+            return;
+        if (!c.isActive()) { //handshake needed
+            if (c.getState()==HANDSHAKE_INCOMPLETE) {
+                String R = webSocketHandshakeResponse(data);
+                if (!R.equals(BAD_REQUEST)) {
+                    sendMessage(c,R,false);
+                    //Main.server.messageToClient(c, R);
+                    c.setState(ACTIVE);
+                }
+            } else {
+                Main.server.dropConnection(c);
+            }
+        } else { //receiving messages from client after handshake
+            System.out.println("Received web message: <"+data+">");
+            String send = "testing";
+            sendBytes(c,encodeFrame(send.getBytes()));
+            //sendMessage(c,"testing");
+        }
+    }
+
+
+    /* decodeMessage(c,data):
+        data is in form of masked websocket frame.
+        returns decoded frame text.
+    */
+    @Override
+    protected String decodeMessage(Connection c, String data) {
+        if (!c.isActive()) { //handshake needed
+            return data;
+        } else { //receiving messages from client after handshake
+            byte[] msgBytes = new byte[Main.server.getBuffer().remaining()];
+            Main.server.getBuffer().get(msgBytes); //copy bytes from buffer to byte array
+            String recvd = new String(decodeFrame(msgBytes));
+            return recvd;
+        }
+    }
+
+
+    /* encodeMessage(c,data):
+        returns handshake response if connection is not registered,
+        otherwise returns unmasked websocket text frame containing data
+     */
+    @Override
+    protected String encodeMessage(Connection c, String data) {
+        if (!c.isActive() && c.getState()==HANDSHAKE_INCOMPLETE)
+            return webSocketHandshakeResponse(data);
+        String enc = new String(encodeFrame(data.getBytes()));
+        return enc;
+    }
+
+
+
+    //PROTOCOL-SPECIFIC PRIVATE METHODS
+
+    /*  webSocketHandShakeResponse(msg):
+        returns the handshake response if msg is in format of handshake request
+    */
+    private String webSocketHandshakeResponse(String msg) {
         Matcher get = Pattern.compile("^GET").matcher(msg);
         try {
             if (get.find()) {
@@ -113,31 +175,6 @@ public class WebSocket extends API {
         return unmaskedShortFrame;
     }
 
-    public void receiveMessage(Connection c, String data) throws IOException {
-        if (!c.isActive()) { //handshake needed
-            if (c.getState()==HANDSHAKE_INCOMPLETE) {
-                String R = webSocketHandshakeRequest(data);
-                if (!R.equals(BAD_REQUEST)) {
-                    Main.server.messageToClient(c, R);
-                    c.setState(ACTIVE);
-                }
-            } else {
-                Main.server.dropConnection(c);
-            }
-        } else { //receiving messages from client after handshake
-            byte[] msgBytes = new byte[Main.server.getBuffer().remaining()];
-            Main.server.getBuffer().get(msgBytes); //copy bytes from buffer to byte array
-            String recvd = new String(decodeFrame(msgBytes));
-            System.out.println("Received web message: <"+recvd+">");
-            //handleWebsocketMessage(c,recvd);
-        }
-    }
-
-    public void sendMessage(Connection c, String data) throws IOException {
-        Main.server.messageToClient(c.getSocket(), encodeFrame(data.getBytes()));
-    }
-
-
 
 
     public static final String BAD_REQUEST = "HTTP/1.1 400 BAD REQUEST\r\nContent-Type: text/html\r\n\r\n";
@@ -148,5 +185,7 @@ public class WebSocket extends API {
     public int getPort() {
         return 80;
     }
+    public int getID() { return API.WEBSOCKET;}
+    public String getName() {return "WebSocket";}
 
 }
