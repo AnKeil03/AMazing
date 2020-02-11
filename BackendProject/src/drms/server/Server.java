@@ -17,18 +17,14 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.LinkedList;
 import drms.server.entity.Connection;
-<<<<<<< HEAD
 import drms.server.command.CommandHandler;
-=======
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
+import drms.server.api.*;
 
 
 public class Server implements Runnable {
 
-
-    public static final int PORT = 80; //HTTP Port
-    public static final int MAX_SIM_CONNECTS = 10; //max number of connections to listen for at once
-    public static final int MAX_CONNECTIONS = 100; //max number of connected clients at one time
+    private int port;
+    private API activeAPI;
 
     private int numConnections,nextConnectionID; //connection management stuff
     private LinkedList<Integer> recycledIDs;
@@ -40,11 +36,14 @@ public class Server implements Runnable {
     private Connection connections[];
 
 
-    public Server() {
+    public Server(API api) {
 
+        activeAPI=api;
+        port = api.getPort();
         socketChannel = null;
         buffer = ByteBuffer.allocate(1024);
         selector = null;
+
 
         numConnections = 0;
         nextConnectionID=0;
@@ -52,13 +51,12 @@ public class Server implements Runnable {
         connections = new Connection[MAX_CONNECTIONS];
         for (int i=0; i<MAX_CONNECTIONS;i++)
             connections[i]=null;
-<<<<<<< HEAD
 
-        CommandHandler.initCommands();
-=======
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
+
 
     }
+
+
 
     /* run():
         called when this thread is started
@@ -72,10 +70,10 @@ public class Server implements Runnable {
         try {
             // welcomeSocket = new ServerSocket(PORT);
             socketChannel = ServerSocketChannel.open();
-            socketChannel.socket().bind(new InetSocketAddress(PORT));
+            socketChannel.socket().bind(new InetSocketAddress(port));
             socketChannel.configureBlocking(false);
 
-            System.out.println("Starting server on port "+PORT+"...");
+            System.out.println("Starting server on port "+port+"...");
 
             selector = Selector.open();
 
@@ -99,12 +97,8 @@ public class Server implements Runnable {
                 }
                 if (!br.ready() && build.length()>0) {
                     build = build.substring(0, build.length()-1); //remove \n at end
-<<<<<<< HEAD
                     //System.out.println("typed: "+build);
                     CommandHandler.processCommand(build);
-=======
-                    System.out.println("typed: "+build);
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
                     build="";
                 }
                 if (numConnects != 0) {
@@ -123,7 +117,7 @@ public class Server implements Runnable {
                             // Register it with the selector for reading
                             sc.register(selector, SelectionKey.OP_READ);
 
-                            registerConnection(s); //register the connection with connection manager
+                            registerConnection(s); //register the connection with server
 
                         } else if ((key.readyOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ) { //incoming data
                             SocketChannel sc = (SocketChannel) key.channel();
@@ -142,29 +136,7 @@ public class Server implements Runnable {
                                     String data = new String(buffer.array(), Charset.forName("UTF-8"));
                                     System.out.println("Received message: <" + data + ">");
                                     Connection cur = getConnection(sc.socket());
-                                    if (!cur.isActive()) { //handshake; this condition needs to be changed to recognize individual clients
-                                        if (cur.getState()==Connection.HANDSHAKE_INCOMPLETE) {
-                                            String R = WebManager.webSocketHandshakeRequest(data);
-                                            if (!R.equals(WebManager.BAD_REQUEST)) {
-                                                messageToClient(cur, R);
-                                                cur.setState(Connection.ACTIVE);
-                                            }
-                                        } else {
-                                            dropConnection(cur); //drop connections that dont do websocket
-                                        }
-                                    } else { //receiving messages from client after handshake
-                                        byte[] msgBytes = new byte[buffer.remaining()];
-                                        buffer.get(msgBytes); //copy bytes from buffer to byte array
-                                        System.out.println("Received web message: <" + (new String(WebManager.decodeFrame(msgBytes))) + ">");
-
-                                        String send = "testing"; //testing a reply
-<<<<<<< HEAD
-                                        System.out.println("Replying: "+send);
-=======
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
-                                        messageToClient(sc.socket(), WebManager.encodeFrame(send.getBytes()));
-                                        //killServer = true; //remove this once connections are kept track of
-                                    }
+                                    processIncomingMessage(cur,data);
 
                                 }
                                 // remove dead connections from selector and close
@@ -199,18 +171,30 @@ public class Server implements Runnable {
 
     }
 
-    //Client messaging methods
+    //Communication methods
 
-<<<<<<< HEAD
+    /* processIncomingMessage(c,data):
+        handle data when it is received from a client.
+
+     */
+    private void processIncomingMessage(Connection c, String data) throws IOException {
+        if (activeAPI!=null)
+            activeAPI.receiveMessage(c,data);
+        else {
+            System.out.println("standard tcp data received. echoing back");
+            messageToClient(c,data);
+        }
+    }
+
+
+
+    //Various message to client methods
+
     /* messageToClient(s,<String> mes):
         send message to a client thru their socket connection in form of string
      */
-    private void messageToClient(Socket s, String mes) throws IOException {
+    public void messageToClient(Socket s, String mes) throws IOException {
         DataOutputStream outStream = new DataOutputStream(s.getChannel().socket().getOutputStream());
-=======
-    private void messageToClient(Socket c, String mes) throws IOException {
-        DataOutputStream outStream = new DataOutputStream(c.getChannel().socket().getOutputStream());
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
 
         ByteBuffer bytebuf = ByteBuffer.wrap(mes.getBytes());
         try {
@@ -222,7 +206,7 @@ public class Server implements Runnable {
     /* messageToClient(s,<byte[]> mes):
         send message to a client thru their socket connection in form of byte array
      */
-    private void messageToClient(Socket s, byte[] mes) throws IOException {
+    public void messageToClient(Socket s, byte[] mes) throws IOException {
         DataOutputStream outStream = new DataOutputStream(s.getChannel().socket().getOutputStream());
 
         ByteBuffer bytebuf = ByteBuffer.wrap(mes);
@@ -232,32 +216,16 @@ public class Server implements Runnable {
             System.out.println("Error sending message");
         }
     }
-<<<<<<< HEAD
     /* messageToClient(c,mes):
         send message to a client thru their connection object.
         only takes string arguments.
      */
-=======
-    private void messageToClient(Socket c, byte[] mes) throws IOException {
-        DataOutputStream outStream = new DataOutputStream(c.getChannel().socket().getOutputStream());
-
-        ByteBuffer bytebuf = ByteBuffer.wrap(mes);
-        try {
-            c.getChannel().write(bytebuf);
-        } catch (IOException ex) {
-            System.out.println("Error sending message");
-        }
-    }
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
     public void messageToClient(Connection c, String msg) throws IOException {
         messageToClient(c.getSocket(),msg);
     }
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
 
     // Connection methods
 
@@ -273,7 +241,7 @@ public class Server implements Runnable {
         if (nextConnectionID<MAX_CONNECTIONS) {
             connections[nextConnectionID] = c;
             c.setConnectionID(nextConnectionID++);
-            c.setState(Connection.HANDSHAKE_INCOMPLETE);
+            c.setState(WebSocket.HANDSHAKE_INCOMPLETE);
         }
         else if (recycledIDs.size() > 0) { //all ids will be recycled at this point
             int next = recycledIDs.removeFirst();
@@ -288,7 +256,7 @@ public class Server implements Runnable {
             }
             connections[next]=c;
             c.setConnectionID(next);
-            c.setState(Connection.HANDSHAKE_INCOMPLETE);
+            c.setState(WebSocket.HANDSHAKE_INCOMPLETE);
         }
         else {
             System.out.println("The server is full. Connection rejected.");
@@ -297,21 +265,16 @@ public class Server implements Runnable {
         }
     }
 
-<<<<<<< HEAD
     /* disconnect(s):
         disconnect a tcp socket connection.
         most basic layer of ending a connection.
      */
-=======
-
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
     public void disconnect(Socket s) throws IOException {
         try {
             System.out.println("Disconnecting "+s.toString());
             s.close();
         } catch (NullPointerException e) {
             System.out.println("Error disconnecting client "+s.toString());
-<<<<<<< HEAD
         }
     }
 
@@ -319,64 +282,17 @@ public class Server implements Runnable {
         unregister this connection and disconnect its socket
         also do user-related stuff when it exists
      */
-=======
-        }
-    }
-
-
-    // Connection methods
-
-    /* registerConnection(s):
-        create a connection object attached to socket connection s
-        should probably change id system to something based on
-        hashing client ports
-     */
-    private void registerConnection(Socket s) throws IOException {
-        System.out.println("Attempting to register connection for "+s.toString());
-        Connection c = new Connection(s);
-        numConnections++;
-        if (nextConnectionID<MAX_CONNECTIONS) {
-            connections[nextConnectionID] = c;
-            c.setConnectionID(nextConnectionID++);
-            c.setState(Connection.HANDSHAKE_INCOMPLETE);
-        }
-        else if (recycledIDs.size() > 0) { //all ids will be recycled at this point
-            int next = recycledIDs.removeFirst();
-            while (connections[next]!=null) {
-                if (recycledIDs.size()==0) {
-                    System.out.println("The server is full. Connection rejected.");
-                    dropConnection(c);
-                    return;
-                }
-                else
-                    next = recycledIDs.removeFirst();
-            }
-            connections[next]=c;
-            c.setConnectionID(next);
-            c.setState(Connection.HANDSHAKE_INCOMPLETE);
-        }
-        else {
-            System.out.println("The server is full. Connection rejected.");
-            dropConnection(c);
-            return;
-        }
-    }
-
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
-    private void dropConnection(Connection c) throws IOException {
+    public void dropConnection(Connection c) throws IOException {
         int id = c.getConnectionID();
         disconnect(c.getSocket());
         connections[id]=null;
         recycledIDs.addLast(id); //reuse their connection id so we dont run out of space
     }
 
-<<<<<<< HEAD
     /* getConnection(s):
         returns the connection object associated with a socket.
         based on port socket is connected to
      */
-=======
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
     private Connection getConnection(Socket s) {
         for (Connection c: connections)
             if (c.getPort()==s.getPort())
@@ -385,7 +301,6 @@ public class Server implements Runnable {
         return null;
     }
 
-<<<<<<< HEAD
     public void printConnectionsInfo() {
         int count[]=new int[3];
         int manCount=0;
@@ -411,8 +326,13 @@ public class Server implements Runnable {
     }
 
 
-=======
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
+    public ByteBuffer getBuffer() {return buffer; }
+
+    public static final int HTTP_PORT = 80;
+    public static final int RESTFUL_PORT = 8080;
+    public static final int MAX_SIM_CONNECTS = 10; //max number of connections to listen for at once
+    public static final int MAX_CONNECTIONS = 100; //max number of connected clients at one time
+
 
 
 

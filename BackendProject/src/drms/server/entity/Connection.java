@@ -1,10 +1,7 @@
 package drms.server.entity;
 
-<<<<<<< HEAD
 import java.net.*;
-=======
-import java.net.Socket;
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
+import drms.server.api.*;
 
 public class Connection {
 
@@ -13,26 +10,16 @@ public class Connection {
     private int port;
     private int state;
 
-    public static final int AWAITING_REGISTRATION = -1;
-    public static final int HANDSHAKE_INCOMPLETE = 0;
-    public static final int ACTIVE = 1;
 
     public Connection(Socket s) {
         socket=s;
         connectionID=-1;
         port = s.getPort();
-        state=AWAITING_REGISTRATION;
+        state=WebSocket.AWAITING_REGISTRATION;
     }
 
-    public void setConnectionID(int id) {connectionID=id;}
-    public void setState(int s) {state=s;}
-    public Socket getSocket() {return socket;}
-    public int getConnectionID() {return connectionID;}
-    public boolean isActive(){return (state==ACTIVE);}
-    public int getPort(){return port;}
-    public int getState(){return state;}
 
-<<<<<<< HEAD
+
     public String toString() {
         String ip=(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace(":",".");
         return "[Connection<id="+connectionID+",port="+port+">] state: "+getStateString()
@@ -41,16 +28,23 @@ public class Connection {
 
     private String getStateString() {
         switch (state) {
-            case AWAITING_REGISTRATION:
+            case WebSocket.AWAITING_REGISTRATION:
                 return "Awaiting registration from server";
-            case HANDSHAKE_INCOMPLETE:
+            case WebSocket.HANDSHAKE_INCOMPLETE:
                 return "Awaiting WebSocket handshake completion";
-            case ACTIVE:
+            case WebSocket.ACTIVE:
                 return "Ready for data transfer";
         }
         return "Invalid state";
     }
 
-=======
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
+    public void setConnectionID(int id) {connectionID=id;}
+    public void setState(int s) {state=s;}
+
+    public Socket getSocket() {return socket;}
+    public int getConnectionID() {return connectionID;}
+    public boolean isActive(){return (state==WebSocket.ACTIVE);}
+    public int getPort(){return port;}
+    public int getState(){return state;}
+
 }
