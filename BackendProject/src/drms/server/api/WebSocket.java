@@ -1,4 +1,8 @@
-package drms.server;
+/* WebSocket.java
+    api for WebSocket protocol
+ */
+
+package drms.server.api;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -6,16 +10,84 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.IOException;
+import drms.server.Server;
+import drms.server.entity.Connection;
+import drms.Main;
 
-public class WebManager {
+public class WebSocket extends API {
 
-    public static final String BAD_REQUEST = "HTTP/1.1 400 BAD REQUEST\r\nContent-Type: text/html\r\n\r\n";
+    public WebSocket() {
+        super();
+    }
 
 
-    /*  webSocketHandShakeRequest(msg):
-        returns the handshake response if msg is in format of handshake request
+    /* processMessage(c,data):
+        process packet data after it has been conveted to plaintext.
+        completes handshake for new connections,
+        otherwise replies to any message from an active connection with "testing"
      */
-    public static String webSocketHandshakeRequest(String msg) {
+    @Override
+    public void processMessage(Connection c, String data) throws IOException {
+        if (data==null)
+            return;
+        if (!c.isActive()) { //handshake needed
+            if (c.getState()==HANDSHAKE_INCOMPLETE) {
+                String R = webSocketHandshakeResponse(data);
+                if (!R.equals(BAD_REQUEST)) {
+                    sendMessage(c,R,false);
+                    //Main.server.messageToClient(c, R);
+                    c.setState(ACTIVE);
+                }
+            } else {
+                Main.server.dropConnection(c);
+            }
+        } else { //receiving messages from client after handshake
+            System.out.println("Received web message: <"+data+">");
+            String send = "testing";
+            sendBytes(c,encodeFrame(send.getBytes()));
+            //sendMessage(c,"testing");
+        }
+    }
+
+
+    /* decodeMessage(c,data):
+        data is in form of masked websocket frame.
+        returns decoded frame text.
+    */
+    @Override
+    protected String decodeMessage(Connection c, String data) {
+        if (!c.isActive()) { //handshake needed
+            return data;
+        } else { //receiving messages from client after handshake
+            byte[] msgBytes = new byte[Main.server.getBuffer().remaining()];
+            Main.server.getBuffer().get(msgBytes); //copy bytes from buffer to byte array
+            String recvd = new String(decodeFrame(msgBytes));
+            return recvd;
+        }
+    }
+
+
+    /* encodeMessage(c,data):
+        returns handshake response if connection is not registered,
+        otherwise returns unmasked websocket text frame containing data
+     */
+    @Override
+    protected String encodeMessage(Connection c, String data) {
+        if (!c.isActive() && c.getState()==HANDSHAKE_INCOMPLETE)
+            return webSocketHandshakeResponse(data);
+        String enc = new String(encodeFrame(data.getBytes()));
+        return enc;
+    }
+
+
+
+    //PROTOCOL-SPECIFIC PRIVATE METHODS
+
+    /*  webSocketHandShakeResponse(msg):
+        returns the handshake response if msg is in format of handshake request
+    */
+    private String webSocketHandshakeResponse(String msg) {
         Matcher get = Pattern.compile("^GET").matcher(msg);
         try {
             if (get.find()) {
@@ -46,7 +118,7 @@ public class WebManager {
         found this algorithm at:
         https://stackoverflow.com/questions/18368130/how-to-parse-and-validate-a-websocket-frame-in-java/18368334
      */
-    public static byte[] decodeFrame(byte[] msg) {
+    private byte[] decodeFrame(byte[] msg) {
         int maskIndex = 2;
         byte[] maskBytes = new byte[4];
 
@@ -72,7 +144,7 @@ public class WebManager {
         created from referencing RFC 6455
         https://tools.ietf.org/html/rfc6455
      */
-    public static byte[] encodeFrame(byte[] msg) {
+    private byte[] encodeFrame(byte[] msg) {
 
         byte textFrame = (byte)0b10000001; //first 8 bits of frame
         byte maskedPayloadLen = (byte)0;
@@ -102,5 +174,18 @@ public class WebManager {
 
         return unmaskedShortFrame;
     }
+
+
+
+    public static final String BAD_REQUEST = "HTTP/1.1 400 BAD REQUEST\r\nContent-Type: text/html\r\n\r\n";
+    public static final int AWAITING_REGISTRATION = -1;
+    public static final int HANDSHAKE_INCOMPLETE = 0;
+    public static final int ACTIVE = 1;
+
+    public int getPort() {
+        return 80;
+    }
+    public int getID() { return API.WEBSOCKET;}
+    public String getName() {return "WebSocket";}
 
 }

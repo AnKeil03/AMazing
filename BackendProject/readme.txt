@@ -3,8 +3,13 @@ TESTING WEB CONNECTIONS
 
 1. Start Server
 
-cd to BackendProject directory, then type "./run.sh" for linux or "run.bat" for windows
-* Server runs using sudo so that it can be ran on port 80, so you will be prompted to type your password when executing run.sh
+Enter in terminal in BackendProject directory:
+- Windows: run.bat
+- Mac OS: ./run.sh
+
+Enter Y (yes) or N (no) on startup when prompted if a MySQL server is running.
+
+
 
 
 
@@ -12,6 +17,7 @@ cd to BackendProject directory, then type "./run.sh" for linux or "run.bat" for 
 2. Test front end connection (simple)
 
 Once server is running, open websockettest.html in browser, and the message received should display as "testing".
+
 
 
 

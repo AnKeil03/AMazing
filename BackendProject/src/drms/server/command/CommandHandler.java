@@ -23,12 +23,17 @@ class Help extends Command {
         System.out.println();
     }
 }
+
 class Connections extends Command {
     Connections() {super("connections");}
     void run(String[] args) {
         Main.server.printConnectionsInfo();
     }
 }
+
+
+
+
 
 public class CommandHandler {
 
