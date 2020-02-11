@@ -1,3 +1,7 @@
+/* WebSocket.java
+    api for WebSocket protocol
+ */
+
 package drms.server;
 
 import java.io.UnsupportedEncodingException;
@@ -7,7 +11,7 @@ import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WebManager {
+public class WebSocket {
 
     public static final String BAD_REQUEST = "HTTP/1.1 400 BAD REQUEST\r\nContent-Type: text/html\r\n\r\n";
 
