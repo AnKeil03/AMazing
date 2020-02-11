@@ -1,10 +1,6 @@
 package drms.server.entity;
 
-<<<<<<< HEAD
 import java.net.*;
-=======
-import java.net.Socket;
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
 
 public class Connection {
 
@@ -32,7 +28,6 @@ public class Connection {
     public int getPort(){return port;}
     public int getState(){return state;}
 
-<<<<<<< HEAD
     public String toString() {
         String ip=(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace(":",".");
         return "[Connection<id="+connectionID+",port="+port+">] state: "+getStateString()
@@ -51,6 +46,4 @@ public class Connection {
         return "Invalid state";
     }
 
-=======
->>>>>>> 2cd2c0109a6e93b9cec32cc9b9b669f702ad67ac
 }

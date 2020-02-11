@@ -3,7 +3,7 @@ TESTING WEB CONNECTIONS
 
 1. Start Server
 
-cd to BackendProject directory, then type "./run.sh"
+cd to BackendProject directory, then type "./run.sh" for linux or "run.bat" for windows
 * Server runs using sudo so that it can be ran on port 80, so you will be prompted to type your password when executing run.sh
 
 

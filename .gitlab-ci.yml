@@ -1,0 +1,18 @@
+image: java:latest
+
+stages:
+  - build
+  - execute
+build:
+  stage: build
+  script:
+    - echo "Building"
+    - sudo java -cp /BackendProject/mysql-connector-java-8.0.19/mysql-connector-java-8.0.19.jar drms/Main
+  artifacts:
+    paths:
+      - Server.*
+
+test:
+  stage: execute
+  script:
+    - Server
