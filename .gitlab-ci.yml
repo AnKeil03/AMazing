@@ -1,4 +1,4 @@
-image: java:8-jdk
+image: java:13-jdk
 
 stages:
   - build
@@ -8,7 +8,7 @@ stages:
 before_script:
   - echo `pwd` # debug
   - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
-  - export GRADLE_USER_HOME=`pwd`/.gradle
+  - export GRADLE_USER_HOME=`pwd`/MacySprings/.gradle
 
 cache:
   paths:
@@ -18,7 +18,7 @@ cache:
 build:
   stage: build
   script:
-    - ./gradlew assemble
+    - ./MacySprings/gradlew assemble
   artifacts:
     paths:
       - build/libs/*.jar
@@ -29,7 +29,7 @@ build:
 test:
   stage: test
   script:
-    - ./gradlew check
+    - ./MacySprings/gradlew check
 
 deploy:
   stage: deploy
