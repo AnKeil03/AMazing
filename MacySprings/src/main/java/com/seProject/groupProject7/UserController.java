@@ -47,4 +47,9 @@ public class UserController {
         // We didn't the user, return a error response
         return new UserRest("", "", "User not found", -1);
     }
+
+    @RequestMapping(value = "/")
+    public String index() {
+        return "index";
+    }
 }
