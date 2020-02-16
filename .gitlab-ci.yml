@@ -9,6 +9,7 @@ before_script:
   - echo $pwd # debug
   - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
   - set GRADLE_USER_HOME=$pwd\MacySprings\.gradle
+  - mkdir .gradle
   - Copy-Item -Path MacySprings\.gradle\* -Destination .gradle\
 
 cache:
