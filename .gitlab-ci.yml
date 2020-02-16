@@ -1,55 +1,40 @@
-# This file is a template, and might need editing before it works on your project.
-# This is the Gradle build system for JVM applications
-# https://gradle.org/
-# https://github.com/gradle/gradle
-image: gradle:alpine
-
-# Disable the Gradle daemon for Continuous Integration servers as correctness
-# is usually a priority over speed in CI environments. Using a fresh
-# runtime for each build is more reliable since the runtime is completely
-# isolated from any previous builds.
-
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+image: java:13-jdk
 
 stages:
-    - build
-    - test
+  - build
+  - test
+  - deploy
 
 before_script:
   - echo $pwd # debug
+  - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
   - set GRADLE_USER_HOME=$pwd\MacySprings\.gradle
+
+cache:
+  paths:
+    - .gradle\wrapper
+    - .gradle\caches
 
 build:
   stage: build
-  script: 
-    - gradlew assemble
-    
+  script:
+    - .\MacySprings\gradlew assemble
   artifacts:
     paths:
-        - .\MacySprings\libs\*.jar
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: push
-    paths:
-      - .\MacySprings\build
-      - .\MacySrpings\.gradle
+      - build\libs\*.jar
+    expire_in: 1 week
   only:
     - master
 
-
-
 test:
   stage: test
-  script: 
-    - gradlew check
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - .\MacySprings\build
-      - .\MacySprings\.gradle
+  script:
+    - .\MacySprings\gradlew check
 
+deploy:
+  stage: deploy
+  script:
+    - .\deploy
 
 after_script:
   - echo "End CI"
