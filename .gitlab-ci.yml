@@ -17,12 +17,12 @@ variables:
 
 before_script:
   - echo $pwd # debug
-  - set GRADLE_USER_HOME=$pwd/MacySprings/.gradle
+  - set GRADLE_USER_HOME=$pwd\MacySprings\.gradle
 
 build:
   stage: build
   script: 
-    - ./MacySprings/gradlew assemble
+    - .\MacySprings\gradlew assemble
   artifacts:
     paths:
         - ./MacySprings/libs/*.jar
@@ -30,21 +30,21 @@ build:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
     paths:
-      - ./MacySprings/build
-      - ./MacySrpings/.gradle
+      - .\MacySprings\build
+      - .\MacySrpings\.gradle
 
 
 
 test:
   stage: test
   script: 
-    - ./MacySprings/gradlew check
+    - .\MacySprings\gradlew check
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
     paths:
-      - ./MacySprings/build
-      - ./MacySprings/.gradle
+      - .\MacySprings\build
+      - .\MacySprings\.gradle
 
 
 after_script:
