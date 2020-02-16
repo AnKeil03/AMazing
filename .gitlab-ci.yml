@@ -16,11 +16,13 @@ variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=true"
 
 before_script:
+  - echo $pwd # debug
   - set GRADLE_USER_HOME=$pwd/MacySprings/.gradle
 
 build:
   stage: build
-  script: ./MacySprings/gradlew --build-cache assemble
+  script: 
+    - ./MacySprings/gradlew assemble
   artifacts:
     paths:
         - ./MacySprings/libs/*.jar
@@ -35,7 +37,8 @@ build:
 
 test:
   stage: test
-  script: ./MacySprings/gradlew check
+  script: 
+    - ./MacySprings/gradlew check
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
