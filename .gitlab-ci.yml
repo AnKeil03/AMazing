@@ -6,9 +6,9 @@ stages:
   - deploy
 
 before_script:
-  - echo `pwd` # debug
+  - echo $pwd # debug
   - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
-  - set GRADLE_USER_HOME=`pwd`/MacySprings/.gradle
+  - set GRADLE_USER_HOME=$pwd/MacySprings/.gradle
 
 cache:
   paths:
