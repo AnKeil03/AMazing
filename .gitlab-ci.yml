@@ -8,6 +8,10 @@ image: gradle:alpine
 # is usually a priority over speed in CI environments. Using a fresh
 # runtime for each build is more reliable since the runtime is completely
 # isolated from any previous builds.
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
 stages:
     - build
     - test
@@ -16,6 +20,7 @@ before_script:
   - echo $pwd # debug
   - set GRADLE_USER_HOME=$pwd\MacySprings\.gradle
   - cd MacySprings
+  - dir
 
 build:
   stage: build
