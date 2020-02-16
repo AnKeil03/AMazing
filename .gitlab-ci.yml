@@ -9,7 +9,6 @@ before_script:
   - echo $pwd # debug
   - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
   - set GRADLE_USER_HOME=$pwd\MacySprings\.gradle
-  - Copy-Item -Path MacySprings\.gradle\* -Destination .gradle\
 
 cache:
   paths:
@@ -19,7 +18,7 @@ cache:
 build:
   stage: build
   script:
-    - .\MacySprings\gradlew assemble
+    - .\MacySprings\gradlew --project-dir MacySprings assemble
   artifacts:
     paths:
       - build\libs\*.jar
@@ -30,7 +29,7 @@ build:
 test:
   stage: test
   script:
-    - .\MacySprings\gradlew check
+    - .\MacySprings\gradlew --project-dir MacySprings check
 
 
 after_script:
