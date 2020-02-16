@@ -20,28 +20,28 @@ before_script:
 
 build:
   stage: build
-  script: MacySprings/gradlew --build-cache assemble
+  script: ./MacySprings/gradlew --build-cache assemble
   artifacts:
     paths:
-        - ./libs/*.jar
+        - ./MacySprings/libs/*.jar
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
     paths:
-      - /MacySprings/build
-      - /MacySrpings/.gradle
+      - ./MacySprings/build
+      - ./MacySrpings/.gradle
 
 
 
 test:
   stage: test
-  script: MacySprings/gradlew check
+  script: ./MacySprings/gradlew check
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
     paths:
-      - build
-      - .gradle
+      - ./MacySprings/build
+      - ./MacySprings/.gradle
 
 
 after_script:
