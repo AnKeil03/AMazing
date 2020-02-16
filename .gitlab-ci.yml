@@ -18,26 +18,19 @@ variables:
 before_script:
   - set GRADLE_USER_HOME=$pwd/MacySprings/.gradle
 
-cache:
-  paths:
-    - MacySprings/.gradle/wrapper
-    - MacySprings/.gradle/caches
-
 build:
   stage: build
   script: MacySprings/gradle --build-cache assemble
+  artifacts:
+    paths:
+        - ./libs/*.jar
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
     paths:
       - /MacySprings/build
       - /MacySrpings/.gradle
-    artifacts:
-        paths:
-          - ./libs/*.jar
-        expire_in: 1 week
-    only:
-     master
+
 
 
 test:
