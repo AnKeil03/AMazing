@@ -18,8 +18,7 @@ stages:
 
 before_script:
   - echo $pwd # debug
-  - set GRADLE_USER_HOME=$pwd\MacySprings\.gradle
-  - cd MacySprings
+  - set GRADLE_USER_HOME=$pwd\.gradle
   - dir
 
 build:
@@ -28,13 +27,13 @@ build:
     - gradlew assemble
   artifacts:
     paths:
-        - .\MacySprings\libs\*.jar
+        - .\libs\*.jar
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
     paths:
-      - .\MacySprings\build
-      - .\MacySrpings\.gradle
+      - .\build
+      - .\.gradle
   only:
     - master
 
@@ -48,8 +47,8 @@ test:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
     paths:
-      - .\MacySprings\build
-      - .\MacySprings\.gradle
+      - .\build
+      - .\.gradle
 
 
 after_script:
