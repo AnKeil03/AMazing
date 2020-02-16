@@ -12,8 +12,8 @@ before_script:
 
 cache:
   paths:
-    - .gradle\wrapper
-    - .gradle\caches
+    - MacySprings\.gradle\wrapper
+    - MacySprings\.gradle\caches
 
 build:
   stage: build
@@ -31,10 +31,6 @@ test:
   script:
     - .\MacySprings\gradlew check
 
-deploy:
-  stage: deploy
-  script:
-    - .\deploy
 
 after_script:
   - echo "End CI"
