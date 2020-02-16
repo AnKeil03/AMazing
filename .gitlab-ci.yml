@@ -9,6 +9,7 @@ before_script:
   - echo $pwd # debug
   - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
   - set GRADLE_USER_HOME=$pwd\MacySprings\.gradle
+  - cd MacySprings
 
 cache:
   paths:
@@ -18,7 +19,7 @@ cache:
 build:
   stage: build
   script:
-    - .\MacySprings\gradlew assemble
+    - gradlew assemble
   artifacts:
     paths:
       - build\libs\*.jar
@@ -29,7 +30,7 @@ build:
 test:
   stage: test
   script:
-    - .\MacySprings\gradlew check
+    - gradlew check
 
 
 after_script:
