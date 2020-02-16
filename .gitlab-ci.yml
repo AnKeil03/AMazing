@@ -19,13 +19,15 @@ stages:
 before_script:
   - echo $pwd # debug
   - set GRADLE_USER_HOME=$pwd\MacySprings\.gradle
-  - cd MacySprings
-  - dir
+
 
 build:
   stage: build
   script: 
+    - cd MacySprings
+    - dir
     - gradlew.bat assemble
+    
   artifacts:
     paths:
         - .\MacySprings\libs\*.jar
