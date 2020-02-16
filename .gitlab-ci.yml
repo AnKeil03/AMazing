@@ -2,7 +2,7 @@
 # This is the Gradle build system for JVM applications
 # https://gradle.org/
 # https://github.com/gradle/gradle
-image: java:13-jdk
+image: gradle:alpine
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -11,9 +11,6 @@ image: java:13-jdk
 stages:
     - build
     - test
-
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=true"
 
 before_script:
   - echo $pwd # debug
@@ -25,13 +22,15 @@ build:
     - .\MacySprings\gradlew assemble
   artifacts:
     paths:
-        - ./MacySprings/libs/*.jar
+        - .\MacySprings\libs\*.jar
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
     paths:
       - .\MacySprings\build
       - .\MacySrpings\.gradle
+  only:
+    - master
 
 
 
