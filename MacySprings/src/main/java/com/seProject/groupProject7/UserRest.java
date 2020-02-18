@@ -32,6 +32,15 @@ public class UserRest {
         this.result =  result;
         this.resultCode = resultCode;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("User{");
+        sb.append(", name='").append(this.name).append('\'');
+        sb.append(", email=").append(this.email);
+        sb.append('}');
+        return sb.toString();
+    }
 }
 
 

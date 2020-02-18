@@ -38,4 +38,14 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("User{");
+        sb.append("id=").append(this.id);
+        sb.append(", name='").append(this.name).append('\'');
+        sb.append(", email=").append(this.email);
+        sb.append('}');
+        return sb.toString();
+    }
 }

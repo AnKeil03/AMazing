@@ -1,6 +1,7 @@
 package com.seProject.groupProject7;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class UserController {
         return "Successfully added user";
     }
 
-    @PostMapping(path="/get")
+    @GetMapping(path="/get")
     public @ResponseBody
     UserRest getUser(@RequestParam String name) {
         // fetch the user from the database
@@ -48,8 +49,15 @@ public class UserController {
         return new UserRest("", "", "User not found", -1);
     }
 
+    @GetMapping("/all")
+    public List<User> retrieveAllStudents() {
+        return (List<User>) userRepository.findAll();
+    }
+
     @RequestMapping(value = "/")
     public String index() {
         return "index";
     }
+
+
 }
