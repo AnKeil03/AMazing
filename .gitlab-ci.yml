@@ -8,21 +8,21 @@ stages:
 before_script:
   - echo $PWD # debug
   - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
-  - set GRADLE_USER_HOME=$PWD\MacySprings\.gradle
-  - chmod +x .\MacySprings\gradlew
+  - set GRADLE_USER_HOME=$PWD/MacySprings/.gradle
+  - chmod +x ./MacySprings/gradlew
 
 cache:
   paths:
-    - MacySprings\.gradle\wrapper
-    - MacySprings\.gradle\caches
+    - MacySprings/.gradle/wrapper
+    - MacySprings/.gradle/caches
 
 build:
   stage: build
   script:
-    - .\MacySprings\gradlew --project-dir MacySprings assemble
+    - ./MacySprings/gradlew --project-dir MacySprings assemble
   artifacts:
     paths:
-      - build\libs\*.jar
+      - build/libs/*.jar
     expire_in: 1 week
   only:
     - master
@@ -30,7 +30,7 @@ build:
 test:
   stage: test
   script:
-    - .\MacySprings\gradlew --project-dir MacySprings check
+    - ./MacySprings/gradlew --project-dir MacySprings check
 
 
 after_script:

@@ -1,4 +1,6 @@
 BackendProject/.vs/*
 BackendProject/.idea/workspace.xml
 *.prefs
+MacySprings/.gradle
+MacySprings/node_modules
 
