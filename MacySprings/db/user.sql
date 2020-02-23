@@ -1,2 +1,4 @@
-create user 'springuser'@'%' identified by 'S0m3!p@ssw0rd';
-grant all on seproject7.* to 'springuser'@'%';
+USE seproject7;
+create user 'springuser'@'localhost' identified by 'yes';
+grant all on seproject7.* to 'springuser'@'localhost';
+select user;
