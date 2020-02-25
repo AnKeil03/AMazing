@@ -16,13 +16,13 @@ public class UserController {
 
     @PostMapping(path="/add") // Map ONLY POST Requests
     public @ResponseBody
-    String addNewUser (@RequestParam String name, @RequestParam String email) {
+    String addNewUser (@RequestParam String name, @RequestParam String passw, @RequestParam String email) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
 
-        User n = new User();
-        n.setName(name);
-        n.setEmail(email);
+        User n = new User(name,passw,email);
+       // n.setName(name);
+       // n.setEmail(email);
         try {
             userRepository.save(n);
         } catch (Exception e) {
@@ -40,13 +40,13 @@ public class UserController {
         while (users.hasNext()) {
             User user = users.next();
             if (user.getName().compareTo(name) == 0) {
-                UserRest response = new UserRest(user.getName(), user.getEmail());
+                UserRest response = new UserRest(user.getName(), user.getPassword(), user.getEmail());
                 return response;
             }
         }
 
         // We didn't the user, return a error response
-        return new UserRest("", "", "User not found", -1);
+        return new UserRest("", "", "", "User not found", -1);
     }
 
     @GetMapping("/all")

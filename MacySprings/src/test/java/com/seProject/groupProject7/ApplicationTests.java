@@ -1,16 +1,57 @@
 package com.seProject.groupProject7;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import static org.assertj.core.api.Assertions.assertThat;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import org.junit.*;
-import static org.junit.Assert.*;
 
 @SpringBootTest
 class ApplicationTests {
+	@Autowired
+	private UserController controller;
 
-	@Test
-	void contextLoads() {
-		//assertTrue(true);
+	//@Test
+	public void contexLoads() throws Exception {
+		//assertThat(controller).isNotNull();
+		//assert(true);
 	}
 
+
+	//Access to commandline. Might not be needed.
+	void commandlineTest() {
+
+
+		try {
+
+
+			String s;
+			Process p;
+			String command;
+			if (getOperatingSystem().contains("Windows")){
+				command = "dir";
+			}
+			else{
+				command = "ls -aF";
+			}
+			p = Runtime.getRuntime().exec(command);
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(p.getInputStream()));
+			while ((s = br.readLine()) != null) System.out.println("line: " + s);
+			p.waitFor();
+			System.out.println("exit: " + p.exitValue());
+			p.destroy();
+		}
+		catch(Exception e) {
+		}
+
+	}
+
+	public String getOperatingSystem() {
+		String os = System.getProperty("os.name");
+		// System.out.println("Using System Property: " + os);
+		return os;
+	}
 }
