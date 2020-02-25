@@ -1,0 +1,59 @@
+@keyframes batman {
+	0% {
+		width: 40px;
+		transform: rotate(0deg);
+	}
+	
+	50% {
+		width: 200px;
+		transform: rotate(360deg)
+	}
+	
+	100% {
+		width: 40px;
+		transform: rotate(0deg);
+	}
+}
+
+img {
+	animation: batman 5s infinite;
+	border-radius: 1000px;
+	position: absolute;
+	left: 100px;
+	top: 100px;
+}
+
+html {
+	--tileSize: 30px;
+}
+
+#maze {
+	display: flex;
+	flex-direction: row;
+	user-select: none;
+}
+
+.row {
+	flex-direction: row;
+}
+
+.tile {
+	box-sizing: border-box;
+	width: var(--tileSize);
+	height: var(--tileSize);
+	border: solid black 1px;
+	margin-left: -1px;
+	margin-top: -1px;
+}
+
+.tile:hover {
+	border: solid black 1px;
+}
+
+.tile.open {
+	
+}
+
+.tile.closed {
+	background: black;
+}
