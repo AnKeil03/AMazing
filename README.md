@@ -18,10 +18,10 @@ interactive URL: https://ankeil03.github.io/AMazing/
 - Navigate to src/back in terminal
 - Type "node server.js" to launch the server
     - server runs on port 43594 by default
-* if server has issues starting, you may need to install websocket through npm:
+* if server has issues starting, you may need to install node mysql support through npm:
     - install npm ("brew install npm")
     - navigate to src/back directory in command line
-    - type "npm install websocket"
+    - type "npm install mysql"
     - try running server again by typing "node server.js"
 
 ## Accessing the Server from Web Browser
