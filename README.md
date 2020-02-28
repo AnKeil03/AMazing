@@ -8,6 +8,7 @@ interactive URL: https://ankeil03.github.io/AMazing/
     - for Windows OS, https://phoenixnap.com/kb/install-node-js-npm-on-windows
 - Install MySQL Server
     - Mac: "brew install mysql" or similar for other OS
+    - Windows: https://www.mysql.com/why-mysql/windows/
     - run mysql server on your local machine
     - edit src/back/server.js to change username,password,database fields
         * (default values are username="root",password="admin",database="amazeing")
