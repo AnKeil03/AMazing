@@ -97,7 +97,7 @@
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "#main {\r\n    background: #eff;\r\n    margin: 0 auto;\r\n    width: 800px;\r\n}\r\n", ""]);
+exports.push([module.i, "#main {\n    background: #eff;\n    margin: 0 auto;\n    width: 800px;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -32599,9 +32599,13 @@ function (_Component) {
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "Main"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Demo Component"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(UserList, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-        src: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"
-      }));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Login Screen"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        defaultValue: "Username"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        defaultValue: "Password"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "Login"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "Forgot Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "Create Account"));
     }
   }]);
 
@@ -32662,7 +32666,7 @@ function (_Component2) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Member name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Member email"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, users.map(function (member) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
           key: member.id
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, member.name, " "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, member.email), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", null, "Edit"), "|", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", null, "Delete")));
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, member.name, " "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, member.email));
       })))));
     }
   }]);

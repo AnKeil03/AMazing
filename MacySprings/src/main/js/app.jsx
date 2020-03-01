@@ -10,9 +10,12 @@ class Main extends Component {
     render() {
         return (
         <div id = 'Main'>
-            <h1>Demo Component</h1>
-            <UserList/>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"/>
+            <h1>Login Screen</h1>
+            <input type="text" defaultValue="Username" ></input><br />
+            <input type="text" defaultValue="Password" ></input><br />
+            <button>Login</button><br />
+            <button>Forgot Password</button><button>Create Account</button>
+
         </div>
     );
     }
@@ -60,7 +63,6 @@ class UserList extends Component{
                             <tr key={member.id}>
                                 <td>{member.name} </td>
                                 <td>{member.email}</td>
-                                <td><a>Edit</a>|<a>Delete</a></td>
                             </tr>
                         )}
                         </tbody>
