@@ -1,9 +1,12 @@
 package com.seProject.groupProject7;
 
+import java.lang.reflect.Executable;
 import java.util.Iterator;
 import java.util.List;
+import com.seProject.groupProject7.login.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,13 +19,13 @@ public class UserController {
 
     @PostMapping(path="/add") // Map ONLY POST Requests
     public @ResponseBody
-    String addNewUser (@RequestParam String name, @RequestParam String email) {
+    String addNewUser (@RequestParam String name, @RequestParam String passw, @RequestParam String email) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
 
-        User n = new User();
-        n.setName(name);
-        n.setEmail(email);
+        User n = new User(name,Cryptography.cipher(passw),email);
+       // n.setName(name);
+       // n.setEmail(email);
         try {
             userRepository.save(n);
         } catch (Exception e) {
@@ -33,20 +36,20 @@ public class UserController {
 
     @GetMapping(path="/get")
     public @ResponseBody
-    UserRest getUser(@RequestParam String name) {
+    User getUser(@RequestParam String name) {
         // fetch the user from the database
         Iterator<User> users = userRepository.findAll().iterator();
 
         while (users.hasNext()) {
             User user = users.next();
             if (user.getName().compareTo(name) == 0) {
-                UserRest response = new UserRest(user.getName(), user.getEmail());
+                User response = new User(user.getName(), user.getPassword(), user.getEmail());
                 return response;
             }
         }
 
         // We didn't the user, return a error response
-        return new UserRest("", "", "User not found", -1);
+        return null;
     }
 
     @GetMapping("/all")
@@ -59,5 +62,50 @@ public class UserController {
         return "index";
     }
 
+    @RequestMapping(value = "/checkLogin")
+    public @ResponseBody
+    boolean handleLoginRequest(@RequestParam String user,@RequestParam String pass) {
+        System.out.println("Processing login request...");
+        User check = new User(user,Cryptography.cipher(pass),"empty@noemail.com");
+        return loginCheck(check);
+        //Extend to return Session Token
+    }
+
+    @DeleteMapping(value = "removeUser")
+    public void removeUser(@RequestParam String username){
+        try{
+            Iterator<User> users = userRepository.findAll().iterator();
+
+            while (users.hasNext()) {
+                User user = users.next();
+                if (user.getName().compareTo(username) == 0) {
+                    userRepository.delete(user);
+                    System.out.println("Removing user: " + username);
+                    return;
+                }
+            }
+
+        }
+        catch (Exception ex){
+            System.out.println(ex.toString());
+        }
+    }
+
+    public boolean loginCheck(User check) {
+        User compareWith = getUser(check.getName());
+        if (compareWith==null) { //new user, create
+            //createNewUser(check.getName(),check.getPassword(),check.getEmail());
+            System.out.println("Failed login for user "+check.toString()+": user does not exist.");
+            return false;
+        } else {
+            if (check.getPassword().equals(compareWith.getPassword())) { //login details match
+                System.out.println("Successful login for user "+compareWith.toString());
+                return true;
+            } else {
+                System.out.println("Invalid password for user "+compareWith.getName()+"; expected password = "+compareWith.getPassword());
+                return false;
+            }
+        }
+    }
 
 }

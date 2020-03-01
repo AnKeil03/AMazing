@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import org.junit.*;
+import org.springframework.util.Assert;
 
 @SpringBootTest
 class ApplicationTests {
@@ -15,7 +17,18 @@ class ApplicationTests {
 	@Test
 	public void contexLoads() throws Exception {
 		assertThat(controller).isNotNull();
+		assert(true);
 	}
+
+	@Test
+	public void testUserLogin() throws Exception {
+		controller.addNewUser("me2", "thisIsAPassword", "me@you.com");
+		assert(controller.handleLoginRequest("me2", "thisIsAPassword"));
+		controller.removeUser("me2");
+		Assert.isNull(controller.getUser("me2"), "Not deleted");
+
+	}
+
 
 
 	//Access to commandline. Might not be needed.
