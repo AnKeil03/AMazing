@@ -20,7 +20,7 @@ public class DatabaseAppTests {
     @Autowired
     private MockMvc mockMvc;
 
-    //@Test
+    @Test
     public void shouldReturnDefaultMessage() throws Exception {
         this.mockMvc.perform(get("/user/all")).andDo(print())
                 .andExpect(status().isOk())

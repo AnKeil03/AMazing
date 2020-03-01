@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.Scanner;
 
+//CommandLineRunner usage: any initialization things we need to run prior to using the application
 @Component
 public class DatabaseLoader implements CommandLineRunner {
 
@@ -38,10 +39,12 @@ public class DatabaseLoader implements CommandLineRunner {
         listUsers();
         loginManager = new LoginManager(this.repository);
 
+
         loginManager.handleLoginRequest("testuser","testpassword");
         loginManager.handleLoginRequest("kane","notkanespassword");
         loginManager.handleLoginRequest("newuser","nonexistentpassword");
         loginManager.handleLoginRequest("newuser","notthenewuserspassword");
+
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         serverCommands = new CommandListener(br);
