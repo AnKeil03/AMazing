@@ -6,15 +6,22 @@ import '../webpack/css/main.css'
 //const client = require('./client');
 
 class Main extends Component {
-
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+    handleClick() {
+            console.log('Click happened');
+    }
     render() {
         return (
         <div id = 'Main'>
             <h1>Login Screen</h1>
-            <input type="text" defaultValue="Username" ></input><br />
-            <input type="text" defaultValue="Password" ></input><br />
-            <button>Login</button><br />
-            <button>Forgot Password</button><button>Create Account</button>
+            <input type="text" name="Username" placeholder="Username" ></input><br />
+            <input type="text" name="Password" placeholder="Password" ></input><br />
+            <button onClick={this.handleClick} >Login</button><br />
+            <button onClick={this.handleClick} >Forgot Password</button>
+            <button onClick={this.handleClick} >Create Account</button>
 
         </div>
     );

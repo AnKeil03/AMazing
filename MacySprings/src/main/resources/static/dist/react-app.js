@@ -32569,9 +32569,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -32588,24 +32588,41 @@ var Main =
 function (_Component) {
   _inherits(Main, _Component);
 
-  function Main() {
+  function Main(props) {
+    var _this;
+
     _classCallCheck(this, Main);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Main).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Main).call(this, props));
+    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(Main, [{
+    key: "handleClick",
+    value: function handleClick() {
+      console.log('Click happened');
+    }
+  }, {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "Main"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Login Screen"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
-        defaultValue: "Username"
+        name: "Username",
+        placeholder: "Username"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
-        defaultValue: "Password"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "Login"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "Forgot Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "Create Account"));
+        name: "Password",
+        placeholder: "Password"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.handleClick
+      }, "Login"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.handleClick
+      }, "Forgot Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.handleClick
+      }, "Create Account"));
     }
   }]);
 
@@ -32618,15 +32635,15 @@ function (_Component2) {
   _inherits(UserList, _Component2);
 
   function UserList(props) {
-    var _this;
+    var _this2;
 
     _classCallCheck(this, UserList);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(UserList).call(this, props));
-    _this.state = {
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(UserList).call(this, props));
+    _this2.state = {
       users: []
     };
-    return _this;
+    return _this2;
   }
 
   _createClass(UserList, [{
