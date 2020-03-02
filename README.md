@@ -12,8 +12,15 @@ interactive URL: https://ankeil03.github.io/AMazing/
     - run mysql server on your local machine
     - edit src/back/server.js to change username,password,database fields
         * (default values are username="root",password="admin",database="amazeing")
+    For MySQL Workbench:
+        -CREATE DATABASE Amazeing;
+        -CREATE TABLE Amazeing.mazes(maze_id INTEGER, maze_data TEXT);
+        -flush privileges;
+        -ALTER USER 'root'@'localhost' IDENTIFIED BY 'admin';
+        -flush privileges;
     - enter the following query in MySQL to create a table for storing mazes (will automate this later)
         CREATE TABLE mazes(maze_id INTEGER, maze_data TEXT);
+     
 
 ## Running the Server
 - Navigate to src/back in terminal
