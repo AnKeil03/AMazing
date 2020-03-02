@@ -6,13 +6,23 @@ import '../webpack/css/main.css'
 //const client = require('./client');
 
 class Main extends Component {
-
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+    handleClick() {
+            console.log('Click happened');
+    }
     render() {
         return (
         <div id = 'Main'>
-            <h1>Demo Component</h1>
-            <UserList/>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"/>
+            <h1>Login Screen</h1>
+            <input type="text" name="Username" placeholder="Username" ></input><br />
+            <input type="text" name="Password" placeholder="Password" ></input><br />
+            <button onClick={this.handleClick} >Login</button><br />
+            <button onClick={this.handleClick} >Forgot Password</button>
+            <button onClick={this.handleClick} >Create Account</button>
+
         </div>
     );
     }
@@ -60,7 +70,6 @@ class UserList extends Component{
                             <tr key={member.id}>
                                 <td>{member.name} </td>
                                 <td>{member.email}</td>
-                                <td><a>Edit</a>|<a>Delete</a></td>
                             </tr>
                         )}
                         </tbody>
