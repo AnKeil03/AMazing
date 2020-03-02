@@ -2,7 +2,15 @@ plugins {
 	id 'org.springframework.boot' version '2.2.4.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id 'application'
 	id 'com.moowork.node' version '1.3.1'
+}
+application {
+    mainClassName = 'com.seProject.groupProject7.Application'
+}
+run {
+    standardInput = System.in
+    standardOutput = System.out
 }
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "com.moowork.node"
