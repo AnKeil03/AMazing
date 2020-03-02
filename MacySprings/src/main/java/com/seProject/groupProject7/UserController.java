@@ -62,7 +62,7 @@ public class UserController {
         return "index";
     }
 
-    @RequestMapping(value = "/checkLogin")
+    @GetMapping("/checkLogin")
     public @ResponseBody
     boolean handleLoginRequest(@RequestParam String user,@RequestParam String pass) {
         System.out.println("Processing login request...");

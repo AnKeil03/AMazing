@@ -4,14 +4,29 @@ import ReactDOM from 'react-dom'
 //const ReactDOM = require('react-dom');
 import '../webpack/css/main.css'
 //const client = require('./client');
+import axios from 'axios';
 
 class Main extends Component {
     constructor(props) {
         super(props);
+        this.loginSuccessful = false;
+        this.username = "me";
+        this.password = "you";
         this.handleClick = this.handleClick.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
     }
     handleClick() {
             console.log('Click happened');
+    }
+    handleLogin(){
+        axios.get('/user/checkLogin', {params: {user:this.username, pass:this.password}})
+            .then(function (response) {
+                console.log(response);
+                this.loginSuccessful = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
     render() {
         return (
@@ -19,7 +34,7 @@ class Main extends Component {
             <h1>Login Screen</h1>
             <input type="text" name="Username" placeholder="Username" ></input><br />
             <input type="text" name="Password" placeholder="Password" ></input><br />
-            <button onClick={this.handleClick} >Login</button><br />
+            <button onClick={this.handleLogin} >Login</button><br />
             <button onClick={this.handleClick} >Forgot Password</button>
             <button onClick={this.handleClick} >Create Account</button>
 
