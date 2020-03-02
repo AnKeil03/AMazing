@@ -34638,7 +34638,15 @@ function (_Component) {
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "Main"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Login Screen"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(LoginInfo, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Login Screen"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "Username",
+        placeholder: "Username"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "Password",
+        placeholder: "Password"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.handleLogin
       }, "Login"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.handleClick
@@ -34651,57 +34659,21 @@ function (_Component) {
   return Main;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
-var LoginInfo =
-/*#__PURE__*/
-function (_Component2) {
-  _inherits(LoginInfo, _Component2);
-
-  function LoginInfo(props) {
-    var _this2;
-
-    _classCallCheck(this, LoginInfo);
-
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(LoginInfo).call(this, props));
-    _this2.username = "";
-    _this2.password = "";
-    return _this2;
-  }
-
-  _createClass(LoginInfo, [{
-    key: "render",
-    value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        id: "LoginInfo"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        name: "Username",
-        placeholder: "Username"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        name: "Password",
-        placeholder: "Password"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null));
-    }
-  }]);
-
-  return LoginInfo;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
 var UserList =
 /*#__PURE__*/
-function (_Component3) {
-  _inherits(UserList, _Component3);
+function (_Component2) {
+  _inherits(UserList, _Component2);
 
   function UserList(props) {
-    var _this3;
+    var _this2;
 
     _classCallCheck(this, UserList);
 
-    _this3 = _possibleConstructorReturn(this, _getPrototypeOf(UserList).call(this, props));
-    _this3.state = {
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(UserList).call(this, props));
+    _this2.state = {
       users: []
     };
-    return _this3;
+    return _this2;
   }
 
   _createClass(UserList, [{
@@ -34751,8 +34723,8 @@ function (_Component3) {
 
 var User =
 /*#__PURE__*/
-function (_Component4) {
-  _inherits(User, _Component4);
+function (_Component3) {
+  _inherits(User, _Component3);
 
   function User() {
     _classCallCheck(this, User);

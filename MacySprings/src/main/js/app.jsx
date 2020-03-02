@@ -22,7 +22,6 @@ class Main extends Component {
         axios.get('/user/checkLogin', {params: {user:this.username, pass:this.password}})
             .then(function (response) {
                 console.log(response);
-                this.loginSuccessful = response.data;
             })
             .catch(function (error) {
                 console.log(error);
