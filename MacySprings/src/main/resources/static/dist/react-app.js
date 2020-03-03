@@ -34609,15 +34609,46 @@ function (_Component) {
     _this.loginSuccessful = false;
     _this.username = "me";
     _this.password = "you";
-    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
+    _this.registerUser = _this.registerUser.bind(_assertThisInitialized(_this));
+    _this.forgotPassword = _this.forgotPassword.bind(_assertThisInitialized(_this)); //this.handleClick = this.handleClick.bind(this);
+
     _this.handleLogin = _this.handleLogin.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(Main, [{
-    key: "handleClick",
-    value: function handleClick() {
-      console.log('Click happened');
+    key: "registerUser",
+    value: function registerUser() {
+      this.username = document.getElementById("enterUsername").value;
+      var passval = document.getElementById("enterPassword").value;
+      var passsend = this.XOR_hex(passval);
+      this.password = passsend;
+      console.log("user: " + this.username + " ; pass: " + this.password);
+      document.getElementById("statusCode").innerHTML = "Waiting for reply...";
+      axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/user/add', {
+        params: {
+          user: this.username,
+          pass: this.password,
+          email: "test@email.com"
+        }
+      }).then(function (response) {
+        if (response.data == "registersuccess") {
+          document.getElementById("statusCode").innerHTML = "New user created successfully! Please login.";
+        } else if (response.data == "registeralreadyexists") {
+          document.getElementById("statusCode").innerHTML = "Error creating user: User already exists. Please login.";
+        } else {
+          document.getElementById("statusCode").innerHTML = "Error creating user: Unspecified error.";
+        }
+
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
+  }, {
+    key: "forgotPassword",
+    value: function forgotPassword() {
+      document.getElementById("statusCode").innerHTML = "This function is not supported yet.";
     }
   }, {
     key: "XOR_hex",
@@ -34645,12 +34676,21 @@ function (_Component) {
       var passsend = this.XOR_hex(passval);
       this.password = passsend;
       console.log("user: " + this.username + " ; pass: " + this.password);
+      document.getElementById("statusCode").innerHTML = "Waiting for reply...";
       axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/user/checkLogin', {
         params: {
           user: this.username,
           pass: this.password
         }
       }).then(function (response) {
+        if (response.data == "loginsuccess") {
+          document.getElementById("statusCode").innerHTML = "Login successful!";
+        } else if (response.data == "logininvalid") {
+          document.getElementById("statusCode").innerHTML = "Invalid password.";
+        } else if (response.data == "loginnouser") {
+          document.getElementById("statusCode").innerHTML = "User does not exist. Please register.";
+        }
+
         console.log(response);
       })["catch"](function (error) {
         console.log(error);
@@ -34667,17 +34707,19 @@ function (_Component) {
         placeholder: "Username",
         id: "enterUsername"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
+        type: "password",
         name: "Password",
         placeholder: "Password",
         id: "enterPassword"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.handleLogin
       }, "Login"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handleClick
+        onClick: this.forgotPassword
       }, "Forgot Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handleClick
-      }, "Create Account"));
+        onClick: this.registerUser
+      }, "Create Account"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        id: "statusCode"
+      }));
     }
   }]);
 
