@@ -13,8 +13,20 @@ public class Cryptography {
         for(int i = 0; i < text.length(); i++)
             sb.append((char)(text.charAt(i) ^ key.charAt(i % key.length())));
         String result = sb.toString();
+        System.out.println("[cipher]: "+text+"-->"+result);
         return result;
     }
+
+
+    public static String unpad(String inp) {
+        byte[] s = new byte[inp.length()/3];
+        for (int i=0; i<s.length; i++) {
+            s[i]=Byte.parseByte(inp.substring(i*3,i*3+3));
+        }
+        return new String(s);
+
+    }
+
 
 
 }

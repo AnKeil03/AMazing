@@ -1910,7 +1910,7 @@ module.exports = {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "#main {\r\n    background: #eff;\r\n    margin: 0 auto;\r\n    width: 800px;\r\n}\r\n", ""]);
+exports.push([module.i, "#main {\n    background: #eff;\n    margin: 0 auto;\n    width: 800px;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -34609,25 +34609,88 @@ function (_Component) {
     _this.loginSuccessful = false;
     _this.username = "me";
     _this.password = "you";
-    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
+    _this.registerUser = _this.registerUser.bind(_assertThisInitialized(_this));
+    _this.forgotPassword = _this.forgotPassword.bind(_assertThisInitialized(_this)); //this.handleClick = this.handleClick.bind(this);
+
     _this.handleLogin = _this.handleLogin.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(Main, [{
-    key: "handleClick",
-    value: function handleClick() {
-      console.log('Click happened');
+    key: "registerUser",
+    value: function registerUser() {
+      this.username = document.getElementById("enterUsername").value;
+      var passval = document.getElementById("enterPassword").value;
+      var passsend = this.XOR_hex(passval);
+      this.password = passsend;
+      console.log("user: " + this.username + " ; pass: " + this.password);
+      document.getElementById("statusCode").innerHTML = "Waiting for reply...";
+      axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/user/add', {
+        params: {
+          user: this.username,
+          pass: this.password,
+          email: "test@email.com"
+        }
+      }).then(function (response) {
+        if (response.data == "registersuccess") {
+          document.getElementById("statusCode").innerHTML = "New user created successfully! Please login.";
+        } else if (response.data == "registeralreadyexists") {
+          document.getElementById("statusCode").innerHTML = "Error creating user: User already exists. Please login.";
+        } else {
+          document.getElementById("statusCode").innerHTML = "Error creating user: Unspecified error.";
+        }
+
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
+  }, {
+    key: "forgotPassword",
+    value: function forgotPassword() {
+      document.getElementById("statusCode").innerHTML = "This function is not supported yet.";
+    }
+  }, {
+    key: "XOR_hex",
+    value: function XOR_hex(a) {
+      var res = '';
+      var i = 0;
+      var key = '23482342234239472349898';
+
+      while (i < a.length) {
+        var xorr = a.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+        var xorrr = xorr + '';
+        var addme = xorrr.padStart(3, '0');
+        res = res + addme;
+        console.log(addme);
+        i = i + 1;
+      }
+
+      return res;
     }
   }, {
     key: "handleLogin",
     value: function handleLogin() {
+      this.username = document.getElementById("enterUsername").value;
+      var passval = document.getElementById("enterPassword").value;
+      var passsend = this.XOR_hex(passval);
+      this.password = passsend;
+      console.log("user: " + this.username + " ; pass: " + this.password);
+      document.getElementById("statusCode").innerHTML = "Waiting for reply...";
       axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/user/checkLogin', {
         params: {
           user: this.username,
           pass: this.password
         }
       }).then(function (response) {
+        if (response.data == "loginsuccess") {
+          document.getElementById("statusCode").innerHTML = "Login successful!";
+        } else if (response.data == "logininvalid") {
+          document.getElementById("statusCode").innerHTML = "Invalid password.";
+        } else if (response.data == "loginnouser") {
+          document.getElementById("statusCode").innerHTML = "User does not exist. Please register.";
+        }
+
         console.log(response);
       })["catch"](function (error) {
         console.log(error);
@@ -34641,18 +34704,22 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Login Screen"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         name: "Username",
-        placeholder: "Username"
+        placeholder: "Username",
+        id: "enterUsername"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
+        type: "password",
         name: "Password",
-        placeholder: "Password"
+        placeholder: "Password",
+        id: "enterPassword"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.handleLogin
       }, "Login"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handleClick
+        onClick: this.forgotPassword
       }, "Forgot Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handleClick
-      }, "Create Account"));
+        onClick: this.registerUser
+      }, "Create Account"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        id: "statusCode"
+      }));
     }
   }]);
 
