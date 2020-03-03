@@ -1,0 +1,1 @@
+node_modules\.bin\webpack --entry .\src\main\js\app.js -o .\src\main\resources\static\dist\react-app.js

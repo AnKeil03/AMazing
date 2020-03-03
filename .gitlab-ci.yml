@@ -1,0 +1,39 @@
+image: java:13-jdk
+
+stages:
+  - build
+  - test
+  - deploy
+
+before_script:
+  - echo $PWD # debug
+  - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
+  - set GRADLE_USER_HOME=$PWD/MacySprings/.gradle
+  - set JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/bin/"
+  - chmod +x ./MacySprings/gradlew
+  
+cache:
+  paths:
+    - MacySprings/.gradle/wrapper
+    - MacySprings/.gradle/caches
+
+build:
+  stage: build
+  script:
+    - ./MacySprings/gradlew --project-dir MacySprings assemble
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 week
+  only:
+    - master
+
+test:
+  stage: test
+  script:
+    - ./MacySprings/gradlew --project-dir MacySprings check
+    - ./MacySprings/gradlew --project-dir MacySprings test
+
+
+after_script:
+  - echo "End CI"
