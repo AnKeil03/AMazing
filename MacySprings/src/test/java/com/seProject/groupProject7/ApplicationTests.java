@@ -23,7 +23,7 @@ class ApplicationTests {
 	@Test
 	public void testUserLogin() throws Exception {
 		controller.addNewUser("me2", "thisIsAPassword", "me@you.com");
-		assert(controller.handleLoginRequest("me2", "thisIsAPassword"));
+		assert(controller.handleLoginRequest("me2", "thisIsAPassword").contains("loginsuccess"));
 		controller.removeUser("me2");
 		Assert.isNull(controller.getUser("me2"), "Not deleted");
 
