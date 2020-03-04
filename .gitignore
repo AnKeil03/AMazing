@@ -5,6 +5,8 @@ BackendProject/.idea/workspace.xml
 **/MacySprings/node_modules/*
 **/MacySprings/src/main/resources/static/dist/*
 **/dist
+**/.idea
+**/.gradle
 
 MacySprings/src/main/resources/static/dist/react-app.js
 MacySprings/src/main/resources/static/dist/react-app.js.map
