@@ -11,17 +11,20 @@ public class User {
     private String name;
     private String password;
     private String email;
+    private int userSession;
 
     public User() {
         this.name="testuser";
         this.email="test@email.com";
         this.password = "testpassword";
+        this.userSession = -1;
     }
 
     public User(String name, String password, String email) {
         this.name=name;
         this.email=email;
         this.password = password;
+        this.userSession=-1;
     }
 
     public Integer getId() {
@@ -51,6 +54,9 @@ public class User {
     public void setPassword(String newp) {
         this.password=newp;
     }
+
+    public int getUserSessionID() {return this.userSession;}
+    public void setUserSessionID(int id) {this.userSession=id;}
 
     public String getPassword() {
         return this.password;

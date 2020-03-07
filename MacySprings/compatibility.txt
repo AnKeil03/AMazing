@@ -1,0 +1,13 @@
+Session Token: sends cookie to browser holding the session ID
+
+Requirements for Setup:
+- server_setting table must be created in the database; query for creation:
+    "CREATE TABLE seproject7.server_setting(name TEXT, value TEXT);"
+
+Needs Front End Support:
+- the "login" button now logs a user out if they are already logged in
+   - update status code element from "waiting for reply..." to "please login"
+- dummy "user info" page at 127.0.0.1:8080/web/myinfo
+   - displays username/email if logged in
+   - displays "please login" msg if not logged in
+
