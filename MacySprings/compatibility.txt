@@ -11,3 +11,31 @@ Needs Front End Support:
    - displays username/email if logged in
    - displays "please login" msg if not logged in
 
+
+
+Emailing:
+
+Requirements for Setup:
+- dummy gmail account for sending emails to users
+    - example: create gmail account "seproject7mailer@gmail.com" with password "seproject"
+        * note: I already set up this account with these credentials. feel free to login and test with it
+    - in EmailController.java search for "String fromAddres = " and change to:
+          String fromAddress = "seproject7mailer@gmail.com";
+          String fromPass = "seproject";
+- change security settings of the new gmail account to allow access without gmail client:
+    - enable imap on your account:
+        - open gmail in web browser
+        - click settings in top right corner then navigate to Forwarding and POP/IMAP
+        - "IMAP Access" --> "enable IMAP"
+        - save changes
+    - enable less secure apps at: https://myaccount.google.com/lesssecureapps
+        * if that doesn't work try doing it through https://myaccount.google.com/security
+- added one dependency to build.gradle:
+    compile('org.springframework.boot:spring-boot-starter-mail')
+
+Testing functionality:
+- visit 127.0.0.1:8080/mail/sendemail
+- check the inbox of email defined in String toAddress = ...; and you should see an email
+
+Todo:
+- implement this feature with user registration
