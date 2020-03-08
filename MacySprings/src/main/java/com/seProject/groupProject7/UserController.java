@@ -86,8 +86,14 @@ public class UserController {
 
     @GetMapping("/checkLogin")
     public @ResponseBody
-    String handleLoginRequest(@CookieValue(value = "sessionID", defaultValue = "-1") String cval, @RequestParam String user,@RequestParam String pass,HttpServletResponse response) {
+    String handleLoginRequest(@CookieValue(value = "sessionID", defaultValue = "-1") String cval,
+                              @RequestParam String user,@RequestParam String pass,
+                              HttpServletResponse response) {
         System.out.println("Processing login request... ");
+
+        //Debug: Currently the password is hashed as sent, then is hashed again in the backend
+        //System.out.println(pass);
+
         ServerSetting cfg = new ServerSetting();
         serverController.addSetting(cfg);
         ServerSetting SeshSetting = serverController.getSetting("nextSessionToken");
@@ -124,12 +130,9 @@ public class UserController {
             seshBye.setPath("/");
             response.addCookie(seshBye);
             return "logout";
-    }
+        }
         //Extend to return Session Token
     }
-
-
-
 
     @DeleteMapping(value = "removeUser")
     public void removeUser(@RequestParam String username){

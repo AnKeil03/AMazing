@@ -73,7 +73,12 @@ class Main extends Component {
                     document.getElementById("statusCode").innerHTML = "Invalid password.";
                 } else if (response.data == "loginnouser") {
                     document.getElementById("statusCode").innerHTML = "User does not exist. Please register.";
+                } else if (response.data == "logout") {
+                    document.getElementById("statusCode").innerHTML = "Error, already logged in. Logging out."
+                } else{
+                    document.getElementById("statusCode").innerHTML = "Error communicating with server."
                 }
+
                 console.log(response);
             })
             .catch(function (error) {

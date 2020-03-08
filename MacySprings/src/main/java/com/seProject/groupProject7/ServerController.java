@@ -19,7 +19,8 @@ public class ServerController {
     @Autowired
     protected SettingsRepository serverSettings;
 
-    public ServerSetting getSetting(String name) {
+    @RequestMapping("/get")
+    public ServerSetting getSetting(@RequestParam String name) {
         // fetch the user from the database
         Iterator<ServerSetting> settings = serverSettings.findAll().iterator();
 
@@ -32,6 +33,7 @@ public class ServerController {
         return null;
     }
 
+    @RequestMapping("/add")
     public int addSetting(ServerSetting S) {
         try {
             if (getSetting(S.getName())!=null) {

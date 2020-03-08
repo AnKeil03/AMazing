@@ -1910,7 +1910,7 @@ module.exports = {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "#main {\n    background: #eff;\n    margin: 0 auto;\n    width: 800px;\n}\n", ""]);
+exports.push([module.i, "#main {\r\n    background: #eff;\r\n    margin: 0 auto;\r\n    width: 800px;\r\n}\r\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -34689,6 +34689,10 @@ function (_Component) {
           document.getElementById("statusCode").innerHTML = "Invalid password.";
         } else if (response.data == "loginnouser") {
           document.getElementById("statusCode").innerHTML = "User does not exist. Please register.";
+        } else if (response.data == "logout") {
+          document.getElementById("statusCode").innerHTML = "Error, already logged in. Logging out.";
+        } else {
+          document.getElementById("statusCode").innerHTML = "Error communicating with server.";
         }
 
         console.log(response);
