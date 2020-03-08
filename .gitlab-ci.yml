@@ -12,9 +12,9 @@ before_script:
   - set JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/bin/"
   - chmod +x ./MacySprings/gradlew
   - sed 's/${MYSQL_HOST:localhost}g/seproject-aws.cdptc7ikhvme.us-east-2.rds.amazonaws.com/' ./MacySprings/src/main/resources/application.properties > temp.properties
-  -mv temp.properties ./MacySprings/src/main/resources/application.properties
+  - mv temp.properties ./MacySprings/src/main/resources/application.properties
   - sed 's/S0m3!p@ssw0rd/eJTSU3cB99c24gVd/g' ./MacySprings/src/main/resources/application.properties > temp.properties
-  -mv temp.properties ./MacySprings/src/main/resources/application.properties
+  - mv temp.properties ./MacySprings/src/main/resources/application.properties
   
 cache:
   paths:
