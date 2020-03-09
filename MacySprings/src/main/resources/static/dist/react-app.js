@@ -1910,7 +1910,7 @@ module.exports = {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "#main {\r\n    background: #eff;\r\n    margin: 0 auto;\r\n    width: 800px;\r\n}\r\n", ""]);
+exports.push([module.i, "#main {\n    background: #eff;\n    margin: 0 auto;\n    width: 800px;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -34607,8 +34607,8 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Main).call(this, props));
     _this.loginSuccessful = false;
-    _this.username = "me";
-    _this.password = "you";
+    _this.username = "";
+    _this.password = "";
     _this.registerUser = _this.registerUser.bind(_assertThisInitialized(_this));
     _this.forgotPassword = _this.forgotPassword.bind(_assertThisInitialized(_this)); //this.handleClick = this.handleClick.bind(this);
 
@@ -34620,7 +34620,11 @@ function (_Component) {
     key: "registerUser",
     value: function registerUser() {
       this.username = document.getElementById("enterUsername").value;
+      document.getElementById("enterUsername").placeholder = "Username";
+      document.getElementById("enterUsername").value = "";
       var passval = document.getElementById("enterPassword").value;
+      document.getElementById("enterPassword").placeholder = "Password";
+      document.getElementById("enterPassword").value = "";
       var passsend = this.XOR_hex(passval);
       this.password = passsend;
       console.log("user: " + this.username + " ; pass: " + this.password);
@@ -34672,7 +34676,11 @@ function (_Component) {
     key: "handleLogin",
     value: function handleLogin() {
       this.username = document.getElementById("enterUsername").value;
+      document.getElementById("enterUsername").placeholder = "Username";
+      document.getElementById("enterUsername").value = "";
       var passval = document.getElementById("enterPassword").value;
+      document.getElementById("enterPassword").placeholder = "Password";
+      document.getElementById("enterPassword").value = "";
       var passsend = this.XOR_hex(passval);
       this.password = passsend;
       console.log("user: " + this.username + " ; pass: " + this.password);

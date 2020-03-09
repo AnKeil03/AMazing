@@ -10,8 +10,8 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.loginSuccessful = false;
-        this.username = "me";
-        this.password = "you";
+        this.username = "";
+        this.password = "";
         this.registerUser = this.registerUser.bind(this);
         this.forgotPassword = this.forgotPassword.bind(this);
         //this.handleClick = this.handleClick.bind(this);
@@ -19,7 +19,11 @@ class Main extends Component {
     }
     registerUser() {
             this.username = document.getElementById("enterUsername").value;
+            document.getElementById("enterUsername").placeholder= "Username";
+            document.getElementById("enterUsername").value= "";
             var passval = document.getElementById("enterPassword").value;
+            document.getElementById("enterPassword").placeholder= "Password";
+            document.getElementById("enterPassword").value= "";
             var passsend = this.XOR_hex(passval);
             this.password = passsend;
             console.log("user: "+this.username+" ; pass: "+this.password);
@@ -60,7 +64,11 @@ class Main extends Component {
     }
     handleLogin(){
         this.username = document.getElementById("enterUsername").value;
+        document.getElementById("enterUsername").placeholder= "Username";
+        document.getElementById("enterUsername").value= "";
         var passval = document.getElementById("enterPassword").value;
+        document.getElementById("enterPassword").placeholder= "Password";
+        document.getElementById("enterPassword").value= "";
         var passsend = this.XOR_hex(passval);
         this.password = passsend;
         console.log("user: "+this.username+" ; pass: "+this.password);
