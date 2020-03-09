@@ -29,17 +29,14 @@ public class EmailController {
         return "failure to send email";
     }
 
-    public String sendTestEmail(String email, String header, String body, Properties props) {
-        try {
-            sendmail(email, header, body, props);
-            return "Email sent successfully";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "failure to send email";
-    }
 
-    private void sendmail(String email, String header, String body, Properties props) throws AddressException, MessagingException, IOException {
+    private void sendmail(String email, String header, String body) throws AddressException, MessagingException, IOException {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
         System.out.println("trying to send an email...");
 
         //String toAddress1 = "kevin-steele@uiowa.edu";
@@ -70,14 +67,6 @@ public class EmailController {
         //multipart.addBodyPart(attachPart);
         msg.setContent(multipart);
         Transport.send(msg);
-    }
-    private void sendmail(String email, String header, String body) throws AddressException, MessagingException, IOException {
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-        sendmail(email,header,body,props);
 
     }
 }
