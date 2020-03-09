@@ -1,7 +1,9 @@
 package com.seProject.groupProject7;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import javax.mail.internet.*;
 import javax.mail.*;
@@ -16,6 +18,7 @@ public class EmailController {
     private String fromPass = "seproject";
 
     @RequestMapping(value = "/sendemail")
+    @ResponseStatus(HttpStatus.CREATED)
     public String sendEmail(@RequestParam String email,@RequestParam String header,@RequestParam String body) {
         try {
             sendmail(email, header, body);
@@ -25,14 +28,19 @@ public class EmailController {
         }
         return "failure to send email";
     }
-    private void sendmail(String email, String header, String body) throws AddressException, MessagingException, IOException {
-        System.out.println("trying to send an email...");
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
 
+    public String sendTestEmail(String email, String header, String body, Properties props) {
+        try {
+            sendmail(email, header, body, props);
+            return "Email sent successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "failure to send email";
+    }
+
+    private void sendmail(String email, String header, String body, Properties props) throws AddressException, MessagingException, IOException {
+        System.out.println("trying to send an email...");
 
         //String toAddress1 = "kevin-steele@uiowa.edu";
         //String toAddress2 = "macy-schmidt@uiowa.edu";
@@ -62,5 +70,14 @@ public class EmailController {
         //multipart.addBodyPart(attachPart);
         msg.setContent(multipart);
         Transport.send(msg);
+    }
+    private void sendmail(String email, String header, String body) throws AddressException, MessagingException, IOException {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        sendmail(email,header,body,props);
+
     }
 }
