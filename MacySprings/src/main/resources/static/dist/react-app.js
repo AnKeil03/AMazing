@@ -34608,6 +34608,7 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Main).call(this, props));
     _this.loginSuccessful = false;
     _this.username = "";
+    _this.email = "";
     _this.password = "";
     _this.registerUser = _this.registerUser.bind(_assertThisInitialized(_this));
     _this.forgotPassword = _this.forgotPassword.bind(_assertThisInitialized(_this)); //this.handleClick = this.handleClick.bind(this);
@@ -34622,6 +34623,9 @@ function (_Component) {
       this.username = document.getElementById("enterUsername").value;
       document.getElementById("enterUsername").placeholder = "Username";
       document.getElementById("enterUsername").value = "";
+      this.email = document.getElementById("enterEmail").value;
+      document.getElementById("enterEmail").placeholder = "Email";
+      document.getElementById("enterEmail").value = "";
       var passval = document.getElementById("enterPassword").value;
       document.getElementById("enterPassword").placeholder = "Password";
       document.getElementById("enterPassword").value = "";
@@ -34633,7 +34637,7 @@ function (_Component) {
         params: {
           user: this.username,
           pass: this.password,
-          email: "test@email.com"
+          email: this.email
         }
       }).then(function (response) {
         if (response.data == "registersuccess") {
@@ -34678,6 +34682,9 @@ function (_Component) {
       this.username = document.getElementById("enterUsername").value;
       document.getElementById("enterUsername").placeholder = "Username";
       document.getElementById("enterUsername").value = "";
+      this.email = document.getElementById("enterEmail").value;
+      document.getElementById("enterEmail").placeholder = "Email";
+      document.getElementById("enterEmail").value = "";
       var passval = document.getElementById("enterPassword").value;
       document.getElementById("enterPassword").placeholder = "Password";
       document.getElementById("enterPassword").value = "";
@@ -34688,7 +34695,8 @@ function (_Component) {
       axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/user/checkLogin', {
         params: {
           user: this.username,
-          pass: this.password
+          pass: this.password,
+          email: this.email
         }
       }).then(function (response) {
         if (response.data == "loginsuccess") {
@@ -34718,6 +34726,11 @@ function (_Component) {
         name: "Username",
         placeholder: "Username",
         id: "enterUsername"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "Email",
+        placeholder: "Email",
+        id: "enterEmail"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "password",
         name: "Password",

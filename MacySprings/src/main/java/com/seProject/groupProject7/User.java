@@ -14,9 +14,9 @@ public class User {
     private int userSession;
 
     public User() {
-        this.name="testuser";
-        this.email="test@email.com";
-        this.password = "testpassword";
+        this.name="";
+        this.email="";
+        this.password = "";
         this.userSession = -1;
     }
 

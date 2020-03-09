@@ -11,6 +11,7 @@ class Main extends Component {
         super(props);
         this.loginSuccessful = false;
         this.username = "";
+        this.email = "";
         this.password = "";
         this.registerUser = this.registerUser.bind(this);
         this.forgotPassword = this.forgotPassword.bind(this);
@@ -21,6 +22,9 @@ class Main extends Component {
             this.username = document.getElementById("enterUsername").value;
             document.getElementById("enterUsername").placeholder= "Username";
             document.getElementById("enterUsername").value= "";
+            this.email = document.getElementById("enterEmail").value;
+            document.getElementById("enterEmail").placeholder= "Email";
+            document.getElementById("enterEmail").value= "";
             var passval = document.getElementById("enterPassword").value;
             document.getElementById("enterPassword").placeholder= "Password";
             document.getElementById("enterPassword").value= "";
@@ -28,7 +32,7 @@ class Main extends Component {
             this.password = passsend;
             console.log("user: "+this.username+" ; pass: "+this.password);
             document.getElementById("statusCode").innerHTML = "Waiting for reply...";
-            axios.get('/user/add', {params: {user:this.username, pass:this.password, email:"test@email.com"}})
+            axios.get('/user/add', {params: {user:this.username, pass:this.password, email:this.email}})
                 .then(function (response) {
                     if (response.data == "registersuccess") {
                         document.getElementById("statusCode").innerHTML = "New user created successfully! Please login.";
@@ -66,6 +70,9 @@ class Main extends Component {
         this.username = document.getElementById("enterUsername").value;
         document.getElementById("enterUsername").placeholder= "Username";
         document.getElementById("enterUsername").value= "";
+        this.email = document.getElementById("enterEmail").value;
+        document.getElementById("enterEmail").placeholder= "Email";
+        document.getElementById("enterEmail").value= "";
         var passval = document.getElementById("enterPassword").value;
         document.getElementById("enterPassword").placeholder= "Password";
         document.getElementById("enterPassword").value= "";
@@ -73,7 +80,7 @@ class Main extends Component {
         this.password = passsend;
         console.log("user: "+this.username+" ; pass: "+this.password);
         document.getElementById("statusCode").innerHTML = "Waiting for reply...";
-        axios.get('/user/checkLogin', {params: {user:this.username, pass:this.password}})
+        axios.get('/user/checkLogin', {params: {user:this.username, pass:this.password, email:this.email}})
             .then(function (response) {
                 if (response.data == "loginsuccess") {
                     document.getElementById("statusCode").innerHTML = "Login successful!";
@@ -98,6 +105,7 @@ class Main extends Component {
         <div id = 'Main'>
             <h1>Login Screen</h1>
             <input type="text" name="Username" placeholder="Username" id = "enterUsername"></input><br />
+            <input type="text" name="Email" placeholder="Email" id = "enterEmail"></input><br />
             <input type="password" name="Password" placeholder="Password" id = "enterPassword"></input><br />
             <button onClick={this.handleLogin} >Login</button><br />
             <button onClick={this.forgotPassword} >Forgot Password</button>
