@@ -2,7 +2,7 @@ package com.seProject.groupProject7;
 
 import javax.persistence.*;
 
-@Entity // This tells Hibernate to make a table out of this class
+@Entity
 public class ServerSetting {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)

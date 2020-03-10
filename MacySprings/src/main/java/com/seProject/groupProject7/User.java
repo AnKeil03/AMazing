@@ -12,12 +12,18 @@ public class User {
     private String password;
     private String email;
     private int userSession;
+    private int privileges;
+
+    public static final int PRIVILEGES_UNVERIFIED = 0;
+    public static final int PRIVILEGES_USER = 1;
+    public static final int PRIVILEGES_ADMIN = 10;
 
     public User() {
         this.name="";
         this.email="";
         this.password = "";
         this.userSession = -1;
+        this.privileges = PRIVILEGES_UNVERIFIED;
     }
 
     public User(String name, String password, String email) {
@@ -57,6 +63,8 @@ public class User {
 
     public int getUserSessionID() {return this.userSession;}
     public void setUserSessionID(int id) {this.userSession=id;}
+    public int getPrivileges() {return this.privileges;}
+    public void setPrivileges(int to) {this.privileges=to;}
 
     public String getPassword() {
         return this.password;

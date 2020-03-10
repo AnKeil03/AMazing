@@ -12,7 +12,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/server")
 public class ServerController {
 
 
@@ -21,7 +21,6 @@ public class ServerController {
 
     @RequestMapping("/get")
     public ServerSetting getSetting(@RequestParam String name) {
-        // fetch the user from the database
         Iterator<ServerSetting> settings = serverSettings.findAll().iterator();
 
         while (settings.hasNext()) {
