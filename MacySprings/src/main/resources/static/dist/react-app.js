@@ -34611,8 +34611,7 @@ function (_Component) {
     _this.email = "";
     _this.password = "";
     _this.registerUser = _this.registerUser.bind(_assertThisInitialized(_this));
-    _this.forgotPassword = _this.forgotPassword.bind(_assertThisInitialized(_this)); //this.handleClick = this.handleClick.bind(this);
-
+    _this.handlePassword = _this.handlePassword.bind(_assertThisInitialized(_this));
     _this.handleLogin = _this.handleLogin.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -34656,6 +34655,7 @@ function (_Component) {
   }, {
     key: "forgotPassword",
     value: function forgotPassword() {
+      console.log("Forgot Pass");
       this.username = document.getElementById("enterUsername").value;
       document.getElementById("enterUsername").placeholder = "Username";
       document.getElementById("enterUsername").value = "";
@@ -34740,6 +34740,35 @@ function (_Component) {
       });
     }
   }, {
+    key: "handlePassword",
+    value: function handlePassword() {
+      console.log("Forgot Pass");
+      this.username = document.getElementById("enterUsername").value;
+      document.getElementById("enterUsername").placeholder = "Username";
+      document.getElementById("enterUsername").value = "";
+      this.email = document.getElementById("enterEmail").value;
+      document.getElementById("enterEmail").placeholder = "Email";
+      document.getElementById("enterEmail").value = "";
+      document.getElementById("statusCode").innerHTML = "Waiting for reply...";
+      axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/mail/sendemail', {
+        params: {
+          email: this.email,
+          header: "Password Reset",
+          body: "This is where the password will be set"
+        }
+      }).then(function (response) {
+        if (response.data == "Email sent successfully") {
+          document.getElementById("statusCode").innerHTML = "Password reset email sent.";
+        } else {
+          document.getElementById("statusCode").innerHTML = "Unable to Reset Password Via this Email.";
+        }
+
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -34762,7 +34791,7 @@ function (_Component) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.handleLogin
       }, "Login"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.forgotPassword
+        onClick: this.handlePassword
       }, "Forgot Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.registerUser
       }, "Create Account"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {

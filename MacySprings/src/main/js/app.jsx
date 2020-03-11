@@ -14,8 +14,7 @@ class Main extends Component {
         this.email = "";
         this.password = "";
         this.registerUser = this.registerUser.bind(this);
-        this.forgotPassword = this.forgotPassword.bind(this);
-        //this.handleClick = this.handleClick.bind(this);
+        this.handlePassword = this.handlePassword.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
     }
     registerUser() {
@@ -49,6 +48,7 @@ class Main extends Component {
 
     }
     forgotPassword() {
+        console.log("Forgot Pass")
         this.username = document.getElementById("enterUsername").value;
         document.getElementById("enterUsername").placeholder= "Username";
         document.getElementById("enterUsername").value= "";
@@ -56,19 +56,19 @@ class Main extends Component {
         document.getElementById("enterEmail").placeholder= "Email";
         document.getElementById("enterEmail").value= "";
         document.getElementById("statusCode").innerHTML = "Waiting for reply...";
-                axios.get('/mail/sendEmail', {params: {email:this.email, header:"Password Reset",body:"This is where the password will be set"}})
-                    .then(function (response) {
-                        if (response.data == "Email sent successfully") {
-                            document.getElementById("statusCode").innerHTML = "Password reset email sent to: "+this.email;
-                        } else{
-                            document.getElementById("statusCode").innerHTML = "Unable to Reset Password Via this Email."
-                        }
+        axios.get('/mail/sendEmail', {params: {email:this.email, header:"Password Reset",body:"This is where the password will be set"}})
+            .then(function (response) {
+                if (response.data == "Email sent successfully") {
+                    document.getElementById("statusCode").innerHTML = "Password reset email sent to: "+this.email;
+                } else{
+                    document.getElementById("statusCode").innerHTML = "Unable to Reset Password Via this Email."
+                }
 
-                        console.log(response);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
     XOR_hex(a) {
         var res = '';
@@ -119,6 +119,29 @@ class Main extends Component {
                 console.log(error);
             });
     }
+    handlePassword(){
+     console.log("Forgot Pass")
+     this.username = document.getElementById("enterUsername").value;
+     document.getElementById("enterUsername").placeholder= "Username";
+     document.getElementById("enterUsername").value= "";
+     this.email = document.getElementById("enterEmail").value;
+     document.getElementById("enterEmail").placeholder= "Email";
+     document.getElementById("enterEmail").value= "";
+     document.getElementById("statusCode").innerHTML = "Waiting for reply...";
+     axios.get('/mail/sendemail', {params: {email:this.email, header:"Password Reset",body:"This is where the password will be set"}})
+         .then(function (response) {
+             if (response.data == "Email sent successfully") {
+                 document.getElementById("statusCode").innerHTML = "Password reset email sent.";
+             } else{
+                 document.getElementById("statusCode").innerHTML = "Unable to Reset Password Via this Email."
+             }
+
+             console.log(response);
+         })
+         .catch(function (error) {
+             console.log(error);
+         });
+    }
     render() {
         return (
         <div id = 'Main'>
@@ -127,7 +150,7 @@ class Main extends Component {
             <input type="text" name="Email" placeholder="Email" id = "enterEmail"></input><br />
             <input type="password" name="Password" placeholder="Password" id = "enterPassword"></input><br />
             <button onClick={this.handleLogin} >Login</button><br />
-            <button onClick={this.forgotPassword} >Forgot Password</button>
+            <button onClick={this.handlePassword} >Forgot Password</button>
             <button onClick={this.registerUser} >Create Account</button>
             <p id = "statusCode"></p>
         </div>
