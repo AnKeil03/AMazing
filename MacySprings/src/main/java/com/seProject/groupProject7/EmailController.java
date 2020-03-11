@@ -63,7 +63,7 @@ public class EmailController {
         msg.setSentDate(new Date());
 
         MimeBodyPart messageBodyPart = new MimeBodyPart();
-        messageBodyPart.setContent(body, "text/html");
+        messageBodyPart.setContent(bodyText, "text/html");
 
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(messageBodyPart);
