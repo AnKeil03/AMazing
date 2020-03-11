@@ -1910,7 +1910,7 @@ module.exports = {
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "#main {\n    background: #eff;\n    margin: 0 auto;\n    width: 800px;\n}\n", ""]);
+exports.push([module.i, "#main {\n    background: #eff;\n    margin: 0 auto;\n    width: 800px;\n}\n#errorCode{\n    color: red;\n    font-weight: bold;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -34619,28 +34619,29 @@ function (_Component) {
   _createClass(Main, [{
     key: "registerUser",
     value: function registerUser() {
+      document.getElementById("errorCode").innerHTML = null;
       this.username = document.getElementById("enterUsername").value;
       this.email = document.getElementById("enterEmail").value;
 
       if (this.username == "") {
-        document.getElementById("statusCode").innerHTML = "Username cannot be empty.";
+        document.getElementById("errorCode").innerHTML = "*Username cannot be empty*";
       } else if (this.email == "") {
-        document.getElementById("statusCode").innerHTML = "Email cannot be empty.";
+        document.getElementById("errorCode").innerHTML = "*Email cannot be empty*";
       } else {
         var passval = document.getElementById("enterPassword").value;
 
         if (passval == "") {
-          document.getElementById("statusCode").innerHTML = "Password cannot be empty.";
+          document.getElementById("errorCode").innerHTML = "*Password cannot be empty*";
         } else if (passval.length < 8) {
-          document.getElementById("statusCode").innerHTML = "Password must be more than 8 characters long.";
+          document.getElementById("errorCode").innerHTML = "*Password must be more than 8 characters long*";
         } else if (passval.length > 20) {
-          document.getElementById("statusCode").innerHTML = "Password must be less than 20 characters long.";
+          document.getElementById("errorCode").innerHTML = "*Password must be less than 20 characters long*";
         } else if (!/[A-Z]/.test(passval)) {
-          document.getElementById("statusCode").innerHTML = "Password must have at least 1 uppercase character.";
+          document.getElementById("errorCode").innerHTML = "*Password must have at least 1 uppercase character*";
         } else if (!/[a-z]/.test(passval)) {
-          document.getElementById("statusCode").innerHTML = "Password must have at least 1 lowercase character.";
+          document.getElementById("errorCode").innerHTML = "*Password must have at least 1 lowercase character*";
         } else if (!/\d/.test(passval)) {
-          document.getElementById("statusCode").innerHTML = "Password must have at least 1 number.";
+          document.getElementById("errorCode").innerHTML = "*Password must have at least 1 number*";
         } else {
           document.getElementById("enterUsername").placeholder = "Username";
           document.getElementById("enterUsername").value = "";
@@ -34686,7 +34687,6 @@ function (_Component) {
         var xorrr = xorr + '';
         var addme = xorrr.padStart(3, '0');
         res = res + addme;
-        console.log(addme);
         i = i + 1;
       }
 
@@ -34695,6 +34695,7 @@ function (_Component) {
   }, {
     key: "handleLogin",
     value: function handleLogin() {
+      document.getElementById("errorCode").innerHTML = null;
       this.username = document.getElementById("enterUsername").value;
       document.getElementById("enterUsername").placeholder = "Username";
       document.getElementById("enterUsername").value = "";
@@ -34736,7 +34737,7 @@ function (_Component) {
   }, {
     key: "handlePassword",
     value: function handlePassword() {
-      console.log("Forgot Pass");
+      document.getElementById("errorCode").innerHTML = null;
       this.username = document.getElementById("enterUsername").value;
       document.getElementById("enterUsername").placeholder = "Username";
       document.getElementById("enterUsername").value = "";
@@ -34767,7 +34768,11 @@ function (_Component) {
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "Main"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Login Screen"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Login Screen"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        id: "errorCode"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        id: "statusCode"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         name: "Username",
         placeholder: "Username",
@@ -34777,7 +34782,7 @@ function (_Component) {
         name: "Email",
         placeholder: "Email",
         id: "enterEmail"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Password Must Contain: 1 UpperCase Letter,  1 Lower Case Letter,", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), "1 Number and be between 8-20 Characters Long"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "password",
         name: "Password",
         placeholder: "Password",
@@ -34788,9 +34793,7 @@ function (_Component) {
         onClick: this.handlePassword
       }, "Forgot Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.registerUser
-      }, "Create Account"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-        id: "statusCode"
-      }));
+      }, "Create Account"));
     }
   }]);
 

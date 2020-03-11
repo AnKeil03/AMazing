@@ -3,3 +3,7 @@
     margin: 0 auto;
     width: 800px;
 }
+#errorCode{
+    color: red;
+    font-weight: bold;
+}

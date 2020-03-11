@@ -18,33 +18,34 @@ class Main extends Component {
         this.handleLogin = this.handleLogin.bind(this);
     }
     registerUser() {
+            document.getElementById("errorCode").innerHTML = null;
             this.username = document.getElementById("enterUsername").value;
             this.email = document.getElementById("enterEmail").value;
             if (this.username == "" ){
-                document.getElementById("statusCode").innerHTML = "Username cannot be empty.";
+                document.getElementById("errorCode").innerHTML = "*Username cannot be empty*";
              }
             else if ( this.email == "" ){
-                document.getElementById("statusCode").innerHTML = "Email cannot be empty.";
+                document.getElementById("errorCode").innerHTML = "*Email cannot be empty*";
             }
             else{
                 var passval = document.getElementById("enterPassword").value;
                 if (passval == ""){
-                    document.getElementById("statusCode").innerHTML = "Password cannot be empty.";
+                    document.getElementById("errorCode").innerHTML = "*Password cannot be empty*";
                 }
                 else if (passval.length<8 ){
-                    document.getElementById("statusCode").innerHTML = "Password must be more than 8 characters long.";
+                    document.getElementById("errorCode").innerHTML = "*Password must be more than 8 characters long*";
                 }
                 else if (passval.length>20 ){
-                    document.getElementById("statusCode").innerHTML = "Password must be less than 20 characters long.";
+                    document.getElementById("errorCode").innerHTML = "*Password must be less than 20 characters long*";
                 }
                 else if (!/[A-Z]/.test(passval)){
-                    document.getElementById("statusCode").innerHTML = "Password must have at least 1 uppercase character.";
+                    document.getElementById("errorCode").innerHTML = "*Password must have at least 1 uppercase character*";
                 }
                 else if (!/[a-z]/.test(passval)){
-                    document.getElementById("statusCode").innerHTML = "Password must have at least 1 lowercase character.";
+                    document.getElementById("errorCode").innerHTML = "*Password must have at least 1 lowercase character*";
                 }
                 else if (!/\d/.test(passval)){
-                    document.getElementById("statusCode").innerHTML = "Password must have at least 1 number.";
+                    document.getElementById("errorCode").innerHTML = "*Password must have at least 1 number*";
                 }
                 else{
                     document.getElementById("enterUsername").placeholder= "Username";
@@ -84,13 +85,13 @@ class Main extends Component {
             var xorrr = xorr+'';
             var addme = xorrr.padStart(3,'0');
             res = res + addme;
-            //console.log(addme);
             i=i+1;
 
         }
         return res;
     }
     handleLogin(){
+        document.getElementById("errorCode").innerHTML = null;
         this.username = document.getElementById("enterUsername").value;
         document.getElementById("enterUsername").placeholder= "Username";
         document.getElementById("enterUsername").value= "";
@@ -126,7 +127,7 @@ class Main extends Component {
             });
     }
     handlePassword(){
-     console.log("Forgot Pass")
+     document.getElementById("errorCode").innerHTML = null;
      this.username = document.getElementById("enterUsername").value;
      document.getElementById("enterUsername").placeholder= "Username";
      document.getElementById("enterUsername").value= "";
@@ -152,13 +153,16 @@ class Main extends Component {
         return (
         <div id = 'Main'>
             <h1>Login Screen</h1>
+            <h2 id = "errorCode"></h2>
+            <h2 id = "statusCode"></h2>
             <input type="text" name="Username" placeholder="Username" id = "enterUsername"></input><br />
             <input type="text" name="Email" placeholder="Email" id = "enterEmail"></input><br />
+            <p>Password Must Contain: 1 UpperCase Letter,  1 Lower Case Letter,< br />
+            1 Number and be between 8-20 Characters Long</p>
             <input type="password" name="Password" placeholder="Password" id = "enterPassword"></input><br />
             <button onClick={this.handleLogin} >Login</button><br />
             <button onClick={this.handlePassword} >Forgot Password</button>
             <button onClick={this.registerUser} >Create Account</button>
-            <p id = "statusCode"></p>
         </div>
     );
     }
