@@ -34656,7 +34656,30 @@ function (_Component) {
   }, {
     key: "forgotPassword",
     value: function forgotPassword() {
-      document.getElementById("statusCode").innerHTML = "This function is not supported yet.";
+      this.username = document.getElementById("enterUsername").value;
+      document.getElementById("enterUsername").placeholder = "Username";
+      document.getElementById("enterUsername").value = "";
+      this.email = document.getElementById("enterEmail").value;
+      document.getElementById("enterEmail").placeholder = "Email";
+      document.getElementById("enterEmail").value = "";
+      document.getElementById("statusCode").innerHTML = "Waiting for reply...";
+      axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/mail/sendEmail', {
+        params: {
+          email: this.email,
+          header: "Password Reset",
+          body: "This is where the password will be set"
+        }
+      }).then(function (response) {
+        if (response.data == "Email sent successfully") {
+          document.getElementById("statusCode").innerHTML = "Password reset email sent to: " + this.email;
+        } else {
+          document.getElementById("statusCode").innerHTML = "Unable to Reset Password Via this Email.";
+        }
+
+        console.log(response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   }, {
     key: "XOR_hex",
