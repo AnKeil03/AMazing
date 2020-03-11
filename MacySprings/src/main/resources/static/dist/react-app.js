@@ -34620,66 +34620,59 @@ function (_Component) {
     key: "registerUser",
     value: function registerUser() {
       this.username = document.getElementById("enterUsername").value;
-      document.getElementById("enterUsername").placeholder = "Username";
-      document.getElementById("enterUsername").value = "";
       this.email = document.getElementById("enterEmail").value;
-      document.getElementById("enterEmail").placeholder = "Email";
-      document.getElementById("enterEmail").value = "";
-      var passval = document.getElementById("enterPassword").value;
-      document.getElementById("enterPassword").placeholder = "Password";
-      document.getElementById("enterPassword").value = "";
-      var passsend = this.XOR_hex(passval);
-      this.password = passsend;
-      console.log("user: " + this.username + " ; pass: " + this.password);
-      document.getElementById("statusCode").innerHTML = "Waiting for reply...";
-      axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/user/add', {
-        params: {
-          user: this.username,
-          pass: this.password,
-          email: this.email
-        }
-      }).then(function (response) {
-        if (response.data == "registersuccess") {
-          document.getElementById("statusCode").innerHTML = "New user created successfully! Please login.";
-        } else if (response.data == "registeralreadyexists") {
-          document.getElementById("statusCode").innerHTML = "Error creating user: User already exists. Please login.";
-        } else {
-          document.getElementById("statusCode").innerHTML = "Error creating user: Unspecified error.";
-        }
 
-        console.log(response);
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    }
-  }, {
-    key: "forgotPassword",
-    value: function forgotPassword() {
-      console.log("Forgot Pass");
-      this.username = document.getElementById("enterUsername").value;
-      document.getElementById("enterUsername").placeholder = "Username";
-      document.getElementById("enterUsername").value = "";
-      this.email = document.getElementById("enterEmail").value;
-      document.getElementById("enterEmail").placeholder = "Email";
-      document.getElementById("enterEmail").value = "";
-      document.getElementById("statusCode").innerHTML = "Waiting for reply...";
-      axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/mail/sendEmail', {
-        params: {
-          email: this.email,
-          header: "Password Reset",
-          body: "This is where the password will be set"
-        }
-      }).then(function (response) {
-        if (response.data == "Email sent successfully") {
-          document.getElementById("statusCode").innerHTML = "Password reset email sent to: " + this.email;
-        } else {
-          document.getElementById("statusCode").innerHTML = "Unable to Reset Password Via this Email.";
-        }
+      if (this.username == "") {
+        document.getElementById("statusCode").innerHTML = "Username cannot be empty.";
+      } else if (this.email == "") {
+        document.getElementById("statusCode").innerHTML = "Email cannot be empty.";
+      } else {
+        var passval = document.getElementById("enterPassword").value;
 
-        console.log(response);
-      })["catch"](function (error) {
-        console.log(error);
-      });
+        if (passval == "") {
+          document.getElementById("statusCode").innerHTML = "Password cannot be empty.";
+        } else if (passval.length < 8) {
+          document.getElementById("statusCode").innerHTML = "Password must be more than 8 characters long.";
+        } else if (passval.length > 20) {
+          document.getElementById("statusCode").innerHTML = "Password must be less than 20 characters long.";
+        } else if (!/[A-Z]/.test(passval)) {
+          document.getElementById("statusCode").innerHTML = "Password must have at least 1 uppercase character.";
+        } else if (!/[a-z]/.test(passval)) {
+          document.getElementById("statusCode").innerHTML = "Password must have at least 1 lowercase character.";
+        } else if (!/\d/.test(passval)) {
+          document.getElementById("statusCode").innerHTML = "Password must have at least 1 number.";
+        } else {
+          document.getElementById("enterUsername").placeholder = "Username";
+          document.getElementById("enterUsername").value = "";
+          document.getElementById("enterEmail").placeholder = "Email";
+          document.getElementById("enterEmail").value = "";
+          document.getElementById("enterPassword").placeholder = "Password";
+          document.getElementById("enterPassword").value = "";
+          var passsend = this.XOR_hex(passval);
+          this.password = passsend;
+          console.log("user: " + this.username + " ; pass: " + this.password);
+          document.getElementById("statusCode").innerHTML = "Waiting for reply...";
+          axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/user/add', {
+            params: {
+              user: this.username,
+              pass: this.password,
+              email: this.email
+            }
+          }).then(function (response) {
+            if (response.data == "registersuccess") {
+              document.getElementById("statusCode").innerHTML = "New user created successfully! Please login.";
+            } else if (response.data == "registeralreadyexists") {
+              document.getElementById("statusCode").innerHTML = "Error creating user: User already exists. Please login.";
+            } else {
+              document.getElementById("statusCode").innerHTML = "Error creating user: Unspecified error.";
+            }
+
+            console.log(response);
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        }
+      }
     }
   }, {
     key: "XOR_hex",
@@ -34736,6 +34729,7 @@ function (_Component) {
 
         console.log(response);
       })["catch"](function (error) {
+        document.getElementById("statusCode").innerHTML = "Error communicating with server.";
         console.log(error);
       });
     }
