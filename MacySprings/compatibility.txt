@@ -39,3 +39,6 @@ Testing functionality:
 
 Todo:
 - implement this feature with user registration
+
+To Run SonarQube:
+gradlew sonarqube -Dsonar.host.url=http://localhost:9000 -Dsonar.verbose=true
