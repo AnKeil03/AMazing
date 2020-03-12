@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/main/js/app.jsx");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/main/js/adminHomeapp.jsx");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -34552,10 +34552,10 @@ module.exports = function (css) {
 
 /***/ }),
 
-/***/ "./src/main/js/app.jsx":
-/*!*****************************!*\
-  !*** ./src/main/js/app.jsx ***!
-  \*****************************/
+/***/ "./src/main/js/adminHomeapp.jsx":
+/*!**************************************!*\
+  !*** ./src/main/js/adminHomeapp.jsx ***!
+  \**************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -34579,9 +34579,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -34600,284 +34600,25 @@ var Main =
 function (_Component) {
   _inherits(Main, _Component);
 
-  function Main(props) {
-    var _this;
-
+  function Main() {
     _classCallCheck(this, Main);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Main).call(this, props));
-    _this.loginSuccessful = false;
-    _this.username = "";
-    _this.email = "";
-    _this.password = "";
-    _this.registerUser = _this.registerUser.bind(_assertThisInitialized(_this));
-    _this.handlePassword = _this.handlePassword.bind(_assertThisInitialized(_this));
-    _this.handleLogin = _this.handleLogin.bind(_assertThisInitialized(_this));
-    return _this;
+    return _possibleConstructorReturn(this, _getPrototypeOf(Main).apply(this, arguments));
   }
 
   _createClass(Main, [{
-    key: "registerUser",
-    value: function registerUser() {
-      document.getElementById("errorCode").innerHTML = null;
-      this.username = document.getElementById("enterUsername").value;
-      this.email = document.getElementById("enterEmail").value;
-
-      if (this.username == "") {
-        document.getElementById("errorCode").innerHTML = "*Username cannot be empty*";
-      } else if (this.email == "") {
-        document.getElementById("errorCode").innerHTML = "*Email cannot be empty*";
-      } else {
-        var passval = document.getElementById("enterPassword").value;
-
-        if (passval == "") {
-          document.getElementById("errorCode").innerHTML = "*Password cannot be empty*";
-        } else if (passval.length < 8) {
-          document.getElementById("errorCode").innerHTML = "*Password must be more than 8 characters long*";
-        } else if (passval.length > 20) {
-          document.getElementById("errorCode").innerHTML = "*Password must be less than 20 characters long*";
-        } else if (!/[A-Z]/.test(passval)) {
-          document.getElementById("errorCode").innerHTML = "*Password must have at least 1 uppercase character*";
-        } else if (!/[a-z]/.test(passval)) {
-          document.getElementById("errorCode").innerHTML = "*Password must have at least 1 lowercase character*";
-        } else if (!/\d/.test(passval)) {
-          document.getElementById("errorCode").innerHTML = "*Password must have at least 1 number*";
-        } else {
-          document.getElementById("enterUsername").placeholder = "Username";
-          document.getElementById("enterUsername").value = "";
-          document.getElementById("enterEmail").placeholder = "Email";
-          document.getElementById("enterEmail").value = "";
-          document.getElementById("enterPassword").placeholder = "Password";
-          document.getElementById("enterPassword").value = "";
-          var passsend = this.XOR_hex(passval);
-          this.password = passsend;
-          console.log("user: " + this.username + " ; pass: " + this.password);
-          document.getElementById("statusCode").innerHTML = "Waiting for reply...";
-          axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/user/add', {
-            params: {
-              user: this.username,
-              pass: this.password,
-              email: this.email
-            }
-          }).then(function (response) {
-            if (response.data == "registersuccess") {
-              document.getElementById("statusCode").innerHTML = "New user created successfully! Please login.";
-            } else if (response.data == "registeralreadyexists") {
-              document.getElementById("statusCode").innerHTML = "Error creating user: User already exists. Please login.";
-            } else {
-              document.getElementById("statusCode").innerHTML = "Error creating user: Unspecified error.";
-            }
-
-            console.log(response);
-          })["catch"](function (error) {
-            console.log(error);
-          });
-        }
-      }
-    }
-  }, {
-    key: "XOR_hex",
-    value: function XOR_hex(a) {
-      var res = '';
-      var i = 0;
-      var key = '23482342234239472349898';
-
-      while (i < a.length) {
-        var xorr = a.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-        var xorrr = xorr + '';
-        var addme = xorrr.padStart(3, '0');
-        res = res + addme;
-        i = i + 1;
-      }
-
-      return res;
-    }
-  }, {
-    key: "handleLogin",
-    value: function handleLogin() {
-      document.getElementById("errorCode").innerHTML = null;
-      this.username = document.getElementById("enterUsername").value;
-      document.getElementById("enterUsername").placeholder = "Username";
-      document.getElementById("enterUsername").value = "";
-      this.email = document.getElementById("enterEmail").value;
-      document.getElementById("enterEmail").placeholder = "Email";
-      document.getElementById("enterEmail").value = "";
-      var passval = document.getElementById("enterPassword").value;
-      document.getElementById("enterPassword").placeholder = "Password";
-      document.getElementById("enterPassword").value = "";
-      var passsend = this.XOR_hex(passval);
-      this.password = passsend;
-      console.log("user: " + this.username + " ; pass: " + this.password);
-      document.getElementById("statusCode").innerHTML = "Waiting for reply...";
-      axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/user/checkLogin', {
-        params: {
-          user: this.username,
-          pass: this.password,
-          email: this.email
-        }
-      }).then(function (response) {
-        if (response.data == "loginsuccess") {
-          document.getElementById("statusCode").innerHTML = "Login successful!";
-          document.location = 'Admin Home.html';
-        } else if (response.data == "logininvalid") {
-          document.getElementById("statusCode").innerHTML = "Invalid password.";
-        } else if (response.data == "loginnouser") {
-          document.getElementById("statusCode").innerHTML = "User does not exist. Please register.";
-        } else if (response.data == "logout") {
-          document.getElementById("statusCode").innerHTML = "Error, already logged in. Logging out.";
-        } else {
-          document.getElementById("statusCode").innerHTML = "Error communicating with server.";
-        }
-
-        console.log(response);
-      })["catch"](function (error) {
-        document.getElementById("statusCode").innerHTML = "Error communicating with server.";
-        console.log(error);
-      });
-    }
-  }, {
-    key: "handlePassword",
-    value: function handlePassword() {
-      document.getElementById("errorCode").innerHTML = null;
-      this.username = document.getElementById("enterUsername").value;
-      document.getElementById("enterUsername").placeholder = "Username";
-      document.getElementById("enterUsername").value = "";
-      this.email = document.getElementById("enterEmail").value;
-      document.getElementById("enterEmail").placeholder = "Email";
-      document.getElementById("enterEmail").value = "";
-      document.getElementById("statusCode").innerHTML = "Waiting for reply...";
-      axios__WEBPACK_IMPORTED_MODULE_3___default.a.get('/mail/sendemail', {
-        params: {
-          email: this.email,
-          header: "Password Reset",
-          body: "This is where the password will be set"
-        }
-      }).then(function (response) {
-        if (response.data == "Email sent successfully") {
-          document.getElementById("statusCode").innerHTML = "Password reset email sent.";
-        } else {
-          document.getElementById("statusCode").innerHTML = "Unable to Reset Password Via this Email.";
-        }
-
-        console.log(response);
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    }
-  }, {
     key: "render",
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        id: "Main"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Login Screen"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
-        id: "errorCode"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
-        id: "statusCode"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        name: "Username",
-        placeholder: "Username",
-        id: "enterUsername"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
-        name: "Email",
-        placeholder: "Email",
-        id: "enterEmail"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Password Must Contain: 1 UpperCase Letter,  1 Lower Case Letter,", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), "1 Number and be between 8-20 Characters Long"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "password",
-        name: "Password",
-        placeholder: "Password",
-        id: "enterPassword"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handleLogin
-      }, "Login"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handlePassword
-      }, "Forgot Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.registerUser
-      }, "Create Account"));
+        id: "Home-admin"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "This is Admin Screen!"));
     }
   }]);
 
   return Main;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
-var UserList =
-/*#__PURE__*/
-function (_Component2) {
-  _inherits(UserList, _Component2);
-
-  function UserList(props) {
-    var _this2;
-
-    _classCallCheck(this, UserList);
-
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(UserList).call(this, props));
-    _this2.state = {
-      users: []
-    };
-    return _this2;
-  }
-
-  _createClass(UserList, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var self = this;
-      fetch('/user/all', {
-        method: 'GET'
-      }).then(function (response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server");
-        }
-
-        return response.json();
-      }).then(function (data) {
-        self.setState({
-          users: data
-        });
-      })["catch"](function (err) {
-        console.log('caught it!', err);
-      });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      if (!this.state.users) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "No Users yet...");
-      }
-
-      var users = Array.from(this.state.users);
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "container"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "panel panel-default p50 uth-panel"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
-        className: "table table-hover"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Member name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Member email"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, users.map(function (member) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
-          key: member.id
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, member.name, " "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, member.email));
-      })))));
-    }
-  }]);
-
-  return UserList;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-var User =
-/*#__PURE__*/
-function (_Component3) {
-  _inherits(User, _Component3);
-
-  function User() {
-    _classCallCheck(this, User);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(User).apply(this, arguments));
-  }
-
-  return User;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
-
-react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Main, null), document.getElementById('react-mountpoint'));
+react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("Home-admin", null), document.getElementById('admin-Home'));
 
 /***/ }),
 
@@ -34908,4 +34649,4 @@ if (false) {}
 /***/ })
 
 /******/ });
-//# sourceMappingURL=react-app.js.map
+//# sourceMappingURL=adminHome-app.js.map

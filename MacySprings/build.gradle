@@ -61,6 +61,16 @@ task buildDonorApp(type: NodeTask, dependsOn: 'npmInstall') {
 			'-o', './src/main/resources/static/dist/donorHome-app.js'
 	]
 }
+task buildAdminApp(type: NodeTask, dependsOn: 'npmInstall') {
+	script = project.file('node_modules/webpack/bin/webpack')
+	args = [
+			'--mode', 'development',
+			'--entry', './src/main/js/adminHomeapp.jsx',
+			'-o', './src/main/resources/static/dist/adminHome-app.js'
+	]
+}
+
+
 
 sonarqube {
 	properties {

@@ -10,13 +10,13 @@ class Main extends Component {
 
 render() {
         return (
-        <div id = 'Home-donor'>
-            <h1>This is Donor Screen!</h1>
+        <div id = 'Home-admin'>
+            <h1>This is Admin Screen!</h1>
         </div>
     );
     }
 }
 ReactDOM.render(
-    <Home-donor />,
-    document.getElementById('donor-Home')
+    <Home-admin />,
+    document.getElementById('admin-Home')
 );
