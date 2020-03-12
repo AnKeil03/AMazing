@@ -109,6 +109,7 @@ class Main extends Component {
             .then(function (response) {
                 if (response.data == "loginsuccess") {
                     document.getElementById("statusCode").innerHTML = "Login successful!";
+                    document.location = 'Donater Home.html'
                 } else if (response.data == "logininvalid") {
                     document.getElementById("statusCode").innerHTML = "Invalid password.";
                 } else if (response.data == "loginnouser") {
