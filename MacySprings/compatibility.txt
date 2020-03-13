@@ -41,4 +41,5 @@ Todo:
 - implement this feature with user registration
 
 To Run SonarQube:
+StartSonar.bat
 gradlew build jacocoTestReport sonarqube

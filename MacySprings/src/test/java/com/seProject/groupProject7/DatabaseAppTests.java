@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+
 
 import com.seProject.groupProject7.login.Cryptography;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.servlet.http.Cookie;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,11 +35,27 @@ public class DatabaseAppTests {
     }
 
     @Test
+    public void testPromote() throws Exception {
+        this.mockMvc.perform(get("/user/add?user=jkljkljkljkljkl&" +
+                "pass="+Cryptography.cipherMatchJS("poingasdflkj") +
+                "&email=me@you.com").cookie(new Cookie("sessionID", "123"))).andDo(print());
+        this.mockMvc.perform(get("/user/get?name=yuumi")).andDo(print());
+        this.mockMvc.perform(get("/user/admin/promoteuser?cval=123&userPromote=jkljkljkljkljkl")
+                .cookie(new Cookie("sessionID", "123")))
+                .andDo(print())
+                .andExpect(content().string(containsString("promoted to admin")));
+        this.mockMvc.perform(delete("/user/removeUser?"+"username=jkljkljkljkljkl"))
+                .andDo(print())
+                .andExpect(status().is(200));
+    }
+
+    @Test
     public void testCookiesByHTTP() throws Exception {
         this.mockMvc.perform(get("/user/add?user=jkljkljkljkljkl&" +
                "pass="+Cryptography.cipherMatchJS("poingasdflkj") +
                 "&email=me@you.com")).andDo(print());
         this.mockMvc.perform(get("/user/get?name=jkljkljkljkljkl")).andDo(print());
+
         this.mockMvc.perform(get("/user/checkLogin?cval=-1&user=jkljkljkljkljkl&" +
                 "pass="+Cryptography.cipherMatchJS("poingasdflkj")))
                 .andDo(print())
@@ -45,6 +65,7 @@ public class DatabaseAppTests {
                 .andExpect(status().is(200));
 
     }
+
 
 
 }

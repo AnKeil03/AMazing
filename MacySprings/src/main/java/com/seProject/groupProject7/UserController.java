@@ -1,6 +1,7 @@
 package com.seProject.groupProject7;
 
 import java.lang.reflect.Executable;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -197,6 +199,4 @@ public class UserController {
         else
             return "please login";
     }
-
-
 }
