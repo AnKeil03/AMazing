@@ -56,15 +56,12 @@ const requestHandler = (request, response) => {
             var post = qs.parse(body);
             insertMaze(post.id,post.contents)
         });
-    }
+    } else {
   console.log('received'+request.body)
 
   if (request.url == '/') {
       response.writeHeader(200, {"Content-Type": "text/html"});
-      fs.readFile('../front/login.html', function (err, html) {
-          if (err) {
-              throw err;
-          }
+      fs.readFile('../front/index.html', function (err, html) {
           response.write(html);
           response.end();
       });
@@ -81,14 +78,12 @@ const requestHandler = (request, response) => {
   } else {
       response.writeHeader(200, {"Content-Type": "text/html"});
       fs.readFile('../front'+request.url, function (err, html) {
-          if (err) {
-              throw err;
-          }
           response.write(html);
           response.end();
       });
   }
   //response.end('Hello Node.js Server!')
+}
 }
 
 const server = http.createServer(requestHandler)

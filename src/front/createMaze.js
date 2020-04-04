@@ -165,6 +165,30 @@ function setEnd(e) {
 	}
 }
 
+var button = document.createElement("button");
+button.innerHTML = "Send Maze to Server";
+var body = document.getElementsByTagName("body")[0];
+body.appendChild(button);
+var nextMazeID = 0;
+button.addEventListener ("click", function() {
+
+	const URL='http://127.0.0.1:43594/createMaze/'
+	var sendmaze = '';
+	for (let i=0; i<WIDTH;i++) {
+		for (let j=0;j<HEIGHT;j++) {
+			sendmaze += data[i][j]
+		}
+	}
+	const dat={
+		name:"maze",
+		id:nextMazeID++,
+		contents:sendmaze
+	}
+	$.post(URL,dat,function(dt,status) {
+		console.log('sent POST with data=<'+dt+'>')
+	});
+});
+
 // begin
 
 initialize()
