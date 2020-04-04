@@ -11,8 +11,33 @@ interactive URL: https://ankeil03.github.io/AMazing/
     - run mysql server on your local machine
     - edit src/back/server.js to change username,password,database fields
         * (default values are username="root",password="admin",database="amazeing")
-    - enter the following query in MySQL to create a table for storing mazes (will automate this later)
-        CREATE TABLE mazes(maze_id INTEGER, maze_data TEXT);
+    - enter the following queries in MySQL to create the tables to store data (will automate this later):
+        CREATE TABLE mazes(
+        Maze_ID INT PRIMARY KEY,
+        Maze_Name TEXT,
+        Maze_Schema TEXT,
+        Creator_Name TEXT
+        );
+
+       CREATE TABLE users(
+       User_ID INT PRIMARY KEY,
+       Email TEXT,
+       Password TEXT,
+       Gamer_Tag TEXT
+       );
+
+       CREATE TABLE maze_attempts(
+       Attempt_ID INT PRIMARY KEY,
+       Maze_ID INT,
+       User_ID INT,
+       Number_of_Moves INT,
+       Start_Time DATETIME,
+       End_Time DATETIME,
+       Completed BOOLEAN
+       );
+
+       Maze Difficulty Query:
+SELECT m.Maze_ID, Maze_Name, COUNT(Completed = TRUE) AS Times_Completed, Number_of_Moves, End_Time-Start_Time AS Completion_Time FROM mazes AS m JOIN maze_attempts AS ma ON m.Maze_ID = ma.Maze_ID GROUP BY m.Maze_ID ORDER BY Number_of_Moves DESC, Times_Completed ASC, Completion_Time DESC;
 
 ## Running the Server
 - Navigate to src/back in terminal
