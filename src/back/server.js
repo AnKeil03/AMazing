@@ -4,6 +4,9 @@ const port = 43594;
 var fs = require('fs');
 var qs = require('querystring');
 var mysql = require('mysql');
+var nStatic = require('node-static');
+var fileServer = new nStatic.Server('../front/');
+
 
 var sqlcon = mysql.createConnection({
   host: "localhost",
@@ -42,18 +45,15 @@ function insertMaze(mid,mdat) {
 
 const requestHandler = (request, response) => {
     if (request.method=='POST') {
-        //var post = qs.parse(body);
         var body = '';
         request.on('data', function (data) {
             body += data;
-            //console.log('A chunk of data has arrived: '+data);
-            //doSelectQuery(console.log)
+            console.log('A chunk of data has arrived: '+data);
         });
 
 
         request.on('end', function () {
             var post = qs.parse(body);
-            //console.log("post had "+post.contents);
             insertMaze(post.id,post.contents)
         });
     }
@@ -61,26 +61,32 @@ const requestHandler = (request, response) => {
 
   if (request.url == '/') {
       response.writeHeader(200, {"Content-Type": "text/html"});
-      fs.readFile('../front/index.html', function (err, html) {
+      fs.readFile('../front/login.html', function (err, html) {
           if (err) {
               throw err;
           }
           response.write(html);
-          //fs.createReadStream("../front/index.html").pipe(response);
           response.end();
       });
   } else if (request.url.endsWith(".js")){
-      const jscr = fs.readFileSync("../front/script.js");
+      const jscr = fs.readFileSync("../front/"+request.url);
       response.setHeader("Content-Type", "text/javascript");
       response.write(jscr);
-      //fs.createReadStream("../front/script.js").pipe(response);
       response.end();
-  } else {
+  } else if (request.url.endsWith(".css")) {
       const csss = fs.readFileSync("../front/style.css");
       response.writeHeader(200, {"Content-Type": "text/css"});
       response.write(csss);
-      //fs.createReadStream("../front/style.css").pipe(response);
       response.end();
+  } else {
+      response.writeHeader(200, {"Content-Type": "text/html"});
+      fs.readFile('../front'+request.url, function (err, html) {
+          if (err) {
+              throw err;
+          }
+          response.write(html);
+          response.end();
+      });
   }
   //response.end('Hello Node.js Server!')
 }
