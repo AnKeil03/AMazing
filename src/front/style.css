@@ -1,3 +1,16 @@
+/* GLOBAL STYLES */
+
+* {
+	font-family: "Helvetica", sans-serif;
+	--padding: 20px;
+	--margin: 10px;
+	--borderColor: black;
+}
+
+body {
+	
+}
+
 @keyframes batman {
 	0% {
 		width: 40px;
@@ -44,16 +57,83 @@ html {
 	border: solid black 1px;
 	margin-left: -1px;
 	margin-top: -1px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .tile:hover {
 	border: solid black 1px;
 }
 
-.tile.open {
-	
+.tile[data-value="1"] {
+	background: black;
 }
 
-.tile.closed {
+.tile[data-value="0"] {
+	background: white;
+}
+
+.tile[data-value="2"] {
+	background: green;
+}
+
+.tile[data-value="3"] {
+	background: red;
+}
+
+#controls {
+	display: flex;
+	flex-direction: column;
+	border: solid black 1px;
+	width: 300px;
+	margin-top: 10px;
+	padding: 10px;
+}
+
+#player {
+	height: 10px;
+	width: 10px;
+	border-radius: 10px;
 	background: black;
+	border: solid white 1px;
+}
+
+/* LOGIN/REGISTER */
+
+body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	width: 400px;
+	border: solid black 1px;
+	padding: var(--padding);
+}
+
+form * {
+	margin: var(--margin) 0;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="submit"] {
+	padding: 5px 10px;
+}
+
+/* MAZE LIST */
+
+table {
+	border-collapse: collapse;
+}
+
+td, th {
+	padding: 5px 20px;
+}
+
+tbody tr:nth-child(odd) {
+	background: lightgray;
 }
