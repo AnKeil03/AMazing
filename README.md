@@ -5,7 +5,7 @@ interactive URL: https://ankeil03.github.io/AMazing/
 ## Environment Setup
 - Install Node JS
     - for Mac OS, recommend installing homebrew and typing "brew install node" in terminal
-    - other group mems pls post other OS instructions for this
+    - for windows OS, download nodejs windows installer through https://nodejs.org/en/download/
 - Install MySQL Server
     - Mac: "brew install mysql" or similar for other OS
     - run mysql server on your local machine
