@@ -35,9 +35,14 @@ interactive URL: https://ankeil03.github.io/AMazing/
        End_Time DATETIME,
        Completed BOOLEAN
        );
+       
+       CREATE TABLE settings(
+       Setting_ID INT PRIMARY KEY,
+       Next_Maze_ID INT
+       );
 
        Maze Difficulty Query:
-SELECT m.Maze_ID, Maze_Name, COUNT(Completed = TRUE) AS Times_Completed, Number_of_Moves, End_Time-Start_Time AS Completion_Time FROM mazes AS m JOIN maze_attempts AS ma ON m.Maze_ID = ma.Maze_ID GROUP BY m.Maze_ID ORDER BY Number_of_Moves DESC, Times_Completed ASC, Completion_Time DESC;
+SELECT m.Maze_ID, Maze_Name, Creator_Name, COUNT(Completed = TRUE) AS Times_Completed, Number_of_Moves, End_Time-Start_Time AS Completion_Time FROM mazes AS m JOIN maze_attempts AS ma ON m.Maze_ID = ma.Maze_ID GROUP BY m.Maze_ID ORDER BY Number_of_Moves DESC, Times_Completed ASC, Completion_Time DESC;
 
 ## Running the Server
 - Navigate to src/back in terminal
