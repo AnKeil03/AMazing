@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<head>
+    <title>AMaze - User Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+    <form>
+        <h1>Your User Information</h1>
+        <p id="infoText"></p>
+        <p id="yourName"></p>
+        <p id="yourEmail"></p>
+        <button type="button" id="logoutbutton">Log out</button>
+        <p id ="changepwtxt">Change Password:</p>
+        <p id ="changepwinfotxt"></p>
+        <input placeholder="Current password" type="password" id="passwordcur">
+        <input placeholder="New password" type="password" id="passwordnew">
+        <input placeholder="Confirm New password" type="password" id="passwordnewconf">
+        <button type="button" id="submitnewpw">Submit</button>
+        <button type="button" id="getmazebutton">View your mazes</button>
+        <p id="mazelist"></p>
+        <script src="user.js"></script>
+    </form>
+</main>
+</body>
+</html>
+

@@ -24,12 +24,38 @@ let data = [
 	[1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
 	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
+
+
 let startPoint = new Tuple(13, 1)
 let endPoint = new Tuple(0, 1)
 let playerPoint = new Tuple(startPoint.x, startPoint.y)
 let moves = 0
 const HEIGHT = data.length
 const WIDTH = data[0].length
+
+function loadData(load) {
+    var i=0;
+    for (var j=0; j<HEIGHT; j++) {
+        for (var k=0; k<WIDTH; k++) {
+            if (i<load.length) {
+                var d = load.charAt(i);
+                data[j][k] = d;
+                if (d==2) {
+                    startPoint.y = j;
+                    startPoint.x = k;
+                    playerPoint.y = j;
+                    playerPoint.x = k;
+                }
+                else if (d==3) {
+                    endPoint.y = j;
+                    endPoint.x = k;
+                }
+                i++;
+            }
+        }
+    }
+    console.log("data changed?")
+}
 
 // draw initial maze
 function render() {
@@ -112,5 +138,44 @@ onkeydown = function(e) {
 	}
 }
 
+//https://stackoverflow.com/questions/5639346/what-is-the-shortest-function-for-reading-a-cookie-by-name-in-javascript
+function readCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+    var c = ca[i];
+    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
+}
+
+function requestMaze() {
+const URL='http://127.0.0.1:43594/mazeInteraction'
+var mazeid = readCookie("playingMaze");
+
+	const dat={
+		requestmaze:mazeid
+	}
+
+	$.post(URL,dat,function(reply,status) {
+		console.log('sent POST and got reply=<'+reply+'>')
+
+		if (reply.startsWith('mazedata=') ){
+		    console.log("got data");
+		    var dat = reply.split('=')[1];
+		    var mazen = dat.split(';')[0];
+		    var mazed = dat.split(';')[1];
+		    var mazetitle = document.getElementById("mazetitle");
+		    mazetitle.innerHTML = "Maze Solver: "+mazen;
+		    loadData(mazed);
+		    render();
+        }
+	});
+}
+
 // begin
-render()
+//render()
+
+requestMaze()
+

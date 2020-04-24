@@ -8,7 +8,7 @@ var body = document.getElementsByTagName("body")[0];
 body.appendChild(button);
 button.addEventListener ("click", function() {
 
-	const URL='http://127.0.0.1:43594/login/'
+	const URL='http://127.0.0.1:43594/login.html'
 
 	const dat={
 		email:em.value,
@@ -25,7 +25,7 @@ button.addEventListener ("click", function() {
             txt.innerHTML = "Invalid password. Please enter the correct password.";
         }
         else if (reply == 'loginok') {
-            txt.innerHTML = "Login successful! Prepare to eat some cookies.";
+            txt.innerHTML = "Login successful! Check out your <a href='user.html'>user page.</a>.";
         }
         else {
             txt.innerHTML = "invalid server response";

@@ -1,4 +1,5 @@
 "use strict"
+var mazemsg = document.getElementById("mazewarn");
 
 class Tuple {
 	constructor(x, y) {
@@ -165,31 +166,64 @@ function setEnd(e) {
 	}
 }
 
+//https://stackoverflow.com/questions/5639346/what-is-the-shortest-function-for-reading-a-cookie-by-name-in-javascript
+function readCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+    var c = ca[i];
+    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
+}
 var button = document.createElement("button");
 button.innerHTML = "Send Maze to Server";
 var body = document.getElementsByTagName("body")[0];
 body.appendChild(button);
 var nextMazeID = 0;
 button.addEventListener ("click", function() {
+    var sessionID = readCookie("userSession");
+    var mazeName = document.getElementById("mazename");
 
-	const URL='http://127.0.0.1:43594/createMaze/'
-	var sendmaze = '';
-	for (let i=0; i<WIDTH;i++) {
-		for (let j=0;j<HEIGHT;j++) {
-			sendmaze += data[i][j]
-		}
+    if (sessionID==null) {
+        mazemsg.innerHTML = "Login session expired."
+    }
+    else if (mazeName==null || mazeName.value.length<1) {
+        mazemsg.innerHTML = "Please enter a name for your maze."
+    }
+    else {
+        const URL='http://127.0.0.1:43594/createMaze/'
+        var sendmaze = '';
+        for (let i=0; i<WIDTH;i++) {
+            for (let j=0;j<HEIGHT;j++) {
+                sendmaze += data[i][j]
+            }
+        }
+        const dat={
+            name:mazename.value,
+            contents:sendmaze
+        }
+        $.post(URL,dat,function(response,status) {
+            //console.log('sent POST with response=<'+response+'>')
+            if (response.startsWith('mazeok')) {
+                var id = response.split(';')[1];
+                mazemsg.innerHTML = "Maze submitted successfully! <a href='mazeInteraction/"+id+"'>Click here to play.</a>";
+            }
+        });
 	}
-	const dat={
-		name:"maze",
-		id:nextMazeID++,
-		contents:sendmaze
-	}
-	$.post(URL,dat,function(dt,status) {
-		console.log('sent POST with data=<'+dt+'>')
-	});
 });
+
+function checkForUser() {
+     var sessionID = readCookie("userSession");
+     if (sessionID==null) {
+        mazemsg.innerHTML = "WARNING: You are not logged in, so your maze will not be saved. Please <a href='login.html'>log in</a> to be able to submit mazes to the server.";
+     }
+}
 
 // begin
 
 initialize()
 render()
+checkForUser()
+
