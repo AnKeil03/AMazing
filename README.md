@@ -23,7 +23,8 @@ interactive URL: https://ankeil03.github.io/AMazing/
        User_ID INT PRIMARY KEY,
        Email TEXT,
        Password TEXT,
-       Gamer_Tag TEXT
+       Gamer_Tag TEXT,
+       Session_Key TEXT
        );
 
        CREATE TABLE maze_attempts(
