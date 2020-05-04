@@ -39,7 +39,8 @@ interactive URL: https://ankeil03.github.io/AMazing/
        
        CREATE TABLE settings(
        Setting_ID INT PRIMARY KEY,
-       Next_Maze_ID INT
+       Description TEXT,
+       Value INT
        );
 
        Maze Difficulty Query:
