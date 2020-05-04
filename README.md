@@ -32,8 +32,8 @@ interactive URL: https://ankeil03.github.io/AMazing/
        Maze_ID INT,
        User_ID INT,
        Number_of_Moves INT,
-       Start_Time DATETIME,
-       End_Time DATETIME,
+       Start_Time INT,
+       End_Time INT,
        Completed BOOLEAN
        );
        
